@@ -1,0 +1,11 @@
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.AssemblyReference.cache
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.CoreCompileInputs.cache
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.exe.config
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.exe
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.pdb
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.exe
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.pdb
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.exe
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.pdb
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.exe.config
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.CopyComplete

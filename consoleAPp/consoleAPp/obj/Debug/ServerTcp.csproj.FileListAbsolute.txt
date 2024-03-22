@@ -1,0 +1,7 @@
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\bin\Debug\consoleAPp.exe.config
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\bin\Debug\consoleAPp.exe
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\bin\Debug\consoleAPp.pdb
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\obj\Debug\ServerTcp.csproj.AssemblyReference.cache
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\obj\Debug\ServerTcp.csproj.CoreCompileInputs.cache
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\obj\Debug\consoleAPp.exe
+C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\consoleAPp\obj\Debug\consoleAPp.pdb
