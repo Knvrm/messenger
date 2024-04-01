@@ -6,6 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Threading;
 
 namespace consoleAPp
 {
@@ -67,18 +68,42 @@ namespace consoleAPp
         {
             byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
             Console.WriteLine("123");
+            
+            while (true)
+            {
+                
+                int bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                if (bytesRead > 0)
+                {
+                    // Получение сообщения 
+                    string receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
-            // Передача секретных ключей
-            int bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
-            Console.WriteLine(bytesRead);
+                    // Если сообщение превышает максимальный размер, оно приходит частями и нужна сборка
+                    if (bytesRead == buffer.Length)
+                    {
+                        StringBuilder fullMessage = new StringBuilder(receivedMessage);
 
-            // Получение ключа
-            string receivedMessage = Encoding.UTF8.GetString(buffer);
+                        // Продолжаем получать части сообщения
+                        while (bytesRead == buffer.Length)
+                        {
+                            bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                            receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                            fullMessage.Append(receivedMessage);
+                        }
 
-            BigInteger receivedKey = BigInteger.Parse(receivedMessage);
+                        receivedMessage = fullMessage.ToString();
+                        // Передача секретных ключей
 
-            Console.WriteLine("B "  + receivedKey.ToString());
-            B = receivedMessage;
+                        // Получение ключа
+
+                        BigInteger receivedKey = BigInteger.Parse(receivedMessage);
+
+                        Console.WriteLine("B " + receivedKey.ToString());
+                        B = receivedMessage;
+                    }
+                }
+            }
+
         }
 
         public async Task ReceiveMessages()

@@ -21,35 +21,7 @@ namespace tcpClient
             const string serverIP = "127.0.0.1"; // IP адрес сервера
             const int serverPort = 8081; // Порт сервера
             await client.ConnectAsync(serverIP, serverPort);
-
-            /*BigInteger a, g, prime, A, K;
-            var rnd = new Random();
-            int bit = 32;
-
-            prime = GeneratePrimeNumber(bit, rnd);
-
-            a = GenerateBigInteger(bit, rnd);
-            while (a >= prime)
-                a = GenerateBigInteger(bit, rnd);
-
-            g = FindPrimitiveRoot(prime);
-            A = BigInteger.ModPow(g, a, prime);
-            Console.WriteLine("A " + A.ToString());
-            Console.WriteLine("a " + a.ToString());
-            Console.WriteLine("g " + g.ToString());
-            Console.WriteLine("prime " + prime.ToString());
-
-            string keys = g.ToString() + " " + prime.ToString() + " " + A.ToString();
-
-
-            await client.SendAsync(keys);
-
-            await client.ReceiveKeys();
-
-            K = BigInteger.ModPow(BigInteger.Parse(client.B), a, prime);
-
-            Console.WriteLine();
-            Console.WriteLine("K " + K.ToString());*/
+            
 
             Console.WriteLine("Введите \"1\", чтобы отправить сообщение, или \"2\", чтобы закрыть соединение.");
 
@@ -71,6 +43,38 @@ namespace tcpClient
                 client.ReceiveMessages();
 
             }
+        }
+
+        static private async Task<BigInteger> GenerateParamsAsync(clientClass client)
+        {
+            BigInteger a, g, prime, A, K;
+            var rnd = new Random();
+            int bit = 32;
+
+            prime = GeneratePrimeNumber(bit, rnd);
+
+            a = GenerateBigInteger(bit, rnd);
+            while (a >= prime)
+                a = GenerateBigInteger(bit, rnd);
+
+            g = FindPrimitiveRoot(prime);
+            A = BigInteger.ModPow(g, a, prime);
+            Console.WriteLine("A " + A.ToString());
+            Console.WriteLine("a " + a.ToString());
+            Console.WriteLine("g " + g.ToString());
+            Console.WriteLine("prime " + prime.ToString());
+
+            string keys = g.ToString() + " " + prime.ToString() + " " + A.ToString();
+
+            await client.SendAsync(keys);
+
+            await client.ReceiveKeys();
+
+            K = BigInteger.ModPow(BigInteger.Parse(client.B), a, prime);
+
+            Console.WriteLine();
+            Console.WriteLine("K " + K.ToString());
+            return 0;
         }
         static private BigInteger GenerateBigInteger(int bit, Random rnd)
         {

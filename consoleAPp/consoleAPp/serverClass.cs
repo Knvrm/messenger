@@ -41,14 +41,35 @@ namespace consoleAPp
             // buffer maxblocksize
             // 1. send msg size
             // 2. send msg
-            byte[] buffer = new byte[maxBlockSize]; // Буфер для больших сообщений
-                                                    // don't forget that message could be received not from client
-                                                    // buffer overflow ?? будет эта проблема здесь или нет?
+            byte[] buffer = new byte[maxBlockSize]; 
+            // Буфер для больших сообщений
+            // don't forget that message could be received not from client
+            // buffer overflow ?? будет эта проблема здесь или нет?
 
-
-            /*int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+            int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
             string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+            
 
+            while (true)
+            {
+                buffer = new byte[maxBlockSize]; // Увеличение размера буфера для больших сообщений
+                bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                Console.WriteLine("Received message from client: " + message);
+
+                // Send the message to all other clients
+                foreach (Socket otherClient in clients)
+                {
+                    if (otherClient != client && otherClient.Connected) // Проверка, подключен ли клиент
+                    {
+                        await otherClient.SendAsync(new ArraySegment<byte>(buffer, 0, bytesRead), SocketFlags.None);
+                    }
+                }
+            }
+        }
+
+        static private async Task<BigInteger> GenerateParamsAsync(string message, List<Socket> clients)
+        {
             var rnd = new Random();
             int bit = 32;
             string[] keys = message.Split();
@@ -67,34 +88,15 @@ namespace consoleAPp
 
             BigInteger K = BigInteger.ModPow(A, b, prime);
             Console.WriteLine("K " + K.ToString());
-            message = B.ToString();
 
-            buffer = Encoding.UTF8.GetBytes(message);
-            Console.WriteLine("123");
+            byte[] buffer1 = B.ToByteArray();
 
             foreach (Socket otherClient in clients)
             {
-                Console.Out.WriteLine(otherClient);
-                await otherClient.SendAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                await otherClient.SendAsync(new ArraySegment<byte>(buffer1), SocketFlags.None);
             }
             Console.WriteLine("123");
-*/
-            while (true)
-            {
-                buffer = new byte[maxBlockSize]; // Увеличение размера буфера для больших сообщений
-                int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
-                string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                Console.WriteLine("Received message from client: " + message);
-
-                // Send the message to all other clients
-                foreach (Socket otherClient in clients)
-                {
-                    if (otherClient != client && otherClient.Connected) // Проверка, подключен ли клиент
-                    {
-                        await otherClient.SendAsync(new ArraySegment<byte>(buffer, 0, bytesRead), SocketFlags.None);
-                    }
-                }
-            }
+            return 0;
         }
 
         public void Stop()
