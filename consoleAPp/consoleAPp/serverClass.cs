@@ -7,7 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.Eventing.Reader;
 using System.Threading;
-using System.Numerics;
+using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI;
+using static consoleAPp.Sql;
+using static consoleAPp.Diffie_Hellman;
 
 namespace consoleAPp
 {
@@ -16,6 +19,7 @@ namespace consoleAPp
         const int maxBlockSize = 1024; // Максимальный размер сообщения для отправки как единое целое
         private Socket listener;
         private List<Socket> clients = new List<Socket>();
+        static MySqlConnection connection;
 
         public serverClass(string ipAddress, int port)
         {
@@ -27,6 +31,11 @@ namespace consoleAPp
         {
             listener.Listen(10); // Максимальное количество ожидающих клиентов
 
+            string connectionString = "server=localhost;database=mydb;user=root;password=root";
+            connection = new MySqlConnection(connectionString);
+            connection.ConnectionString = connectionString;
+            connection.Open();
+
             while (true)
             {
                 Socket client = await listener.AcceptAsync();
@@ -35,68 +44,77 @@ namespace consoleAPp
                 clients.Add(client);
                 Task.Run(() => HandleClientAsync(client));
             }
+
+            connection.Close();
+            Console.WriteLine("Connection closed.");
         }
         private async Task HandleClientAsync(Socket client)
         {
             // buffer maxblocksize
             // 1. send msg size
             // 2. send msg
-            byte[] buffer = new byte[maxBlockSize]; 
+            //byte[] buffer = new byte[maxBlockSize];
             // Буфер для больших сообщений
             // don't forget that message could be received not from client
             // buffer overflow ?? будет эта проблема здесь или нет?
 
-            int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
-            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-            
+            /*int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+            string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);*/
 
             while (true)
             {
-                buffer = new byte[maxBlockSize]; // Увеличение размера буфера для больших сообщений
-                bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
-                message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                byte[] buffer = new byte[maxBlockSize]; 
+                int bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                 Console.WriteLine("Received message from client: " + message);
+                string[] MessageParts = message.Split(new char[] { ' ' }, 2);
+                string login = MessageParts[0];
+                string passwd = MessageParts[1];
 
-                // Send the message to all other clients
-                foreach (Socket otherClient in clients)
+                if (!Sql.SqlQueryCheckLoginAndPassword(login, passwd, connection))
                 {
-                    if (otherClient != client && otherClient.Connected) // Проверка, подключен ли клиент
-                    {
-                        await otherClient.SendAsync(new ArraySegment<byte>(buffer, 0, bytesRead), SocketFlags.None);
-                    }
+                    await SendingMessageToClient("auth Неправильно введены учетные данные, попробуйте снова.", client);
                 }
+                else
+                {
+                    await SendingMessageToClient($"auth Добро пожаловать {login}:", client);
+
+                    bytesRead = await client.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                    message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
+                    MessageParts = message.Split(new char[] { ' ' }, 2);
+                    string ChatName = MessageParts[0];
+
+                    // Проверка на существование чата
+                    if (!Sql.SqlQueryCheckChatName(ChatName, connection))
+                        await SendingMessageToClient("errorChatName Данного чата не существует.", client);
+                    else
+                    {
+                        message = MessageParts[1];
+                        Console.WriteLine(message);
+                        // Отправка сообщения другим пользователям чата
+                        foreach (Socket otherClient in clients)
+                        {
+                            if (otherClient != client && otherClient.Connected) // Проверка, подключен ли клиент
+                            {
+                                await otherClient.SendAsync(new ArraySegment<byte>
+                                    (Encoding.UTF8.GetBytes(message), 0, bytesRead), SocketFlags.None);
+                            }
+                        }
+                    }
+                } 
             }
         }
 
-        static private async Task<BigInteger> GenerateParamsAsync(string message, List<Socket> clients)
+        // Отправка клиенту сообщения
+        private async Task SendingMessageToClient(string message, Socket client)
         {
-            var rnd = new Random();
-            int bit = 32;
-            string[] keys = message.Split();
-            BigInteger g = BigInteger.Parse(keys[0]);
-            BigInteger prime = BigInteger.Parse(keys[1]);
-            BigInteger A = BigInteger.Parse(keys[2]);
-
-            BigInteger b = GenerateBigInteger(bit, rnd);
-            BigInteger B = BigInteger.ModPow(g, b, prime);
-            Console.WriteLine("B " + B.ToString());
-            Console.WriteLine("b " + b.ToString());
-
-            Console.WriteLine("A " + A.ToString());
-            Console.WriteLine("g " + g.ToString());
-            Console.WriteLine("prime " + prime.ToString());
-
-            BigInteger K = BigInteger.ModPow(A, b, prime);
-            Console.WriteLine("K " + K.ToString());
-
-            byte[] buffer1 = B.ToByteArray();
-
             foreach (Socket otherClient in clients)
             {
-                await otherClient.SendAsync(new ArraySegment<byte>(buffer1), SocketFlags.None);
+                if (otherClient == client && otherClient.Connected)
+                {
+                    await client.SendAsync(new ArraySegment<byte>(Encoding.UTF8.GetBytes(message)), SocketFlags.None);
+                }
             }
-            Console.WriteLine("123");
-            return 0;
         }
 
         public void Stop()
@@ -109,26 +127,6 @@ namespace consoleAPp
 
             listener.Close();
         }
-        static private BigInteger GenerateBigInteger(int bit, Random rnd)
-        {
-            string a = "1";
-
-            for (int i = 1; i < bit; i++)
-            {
-                a += Convert.ToString(rnd.Next(0, 2));
-            }
-
-            char[] a_reverse = a.ToCharArray();
-            Array.Reverse(a_reverse);
-            a = new string(a_reverse);
-
-            BigInteger b = 0;
-
-            for (int i = 0; i < a.Length; i++)
-            {
-                b += BigInteger.Pow(2, i) * Convert.ToInt32(Convert.ToString(a[i]));
-            }
-            return BigInteger.Abs(b);
-        }
+        
     }
 }

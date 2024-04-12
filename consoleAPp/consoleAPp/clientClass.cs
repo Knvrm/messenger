@@ -7,72 +7,47 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
 using System.Threading;
+using System.Runtime.CompilerServices;
+using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
+using MySqlX.XDevAPI;
 
 namespace consoleAPp
 {
-    public class clientClass
+    public class socket
     {
         const int maxBlockSize = 1024; // Максимальный размер сообщения для отправки как единое целое
-        public Socket socket;
+        public Socket sckt;
         public string B;
 
         //Создание сокета нужного типа
-        public clientClass()
+        public socket()
         {
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            sckt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
         public async Task ConnectAsync(string serverIP, int serverPort)
         {
             try
             {
-                await socket.ConnectAsync(IPAddress.Parse(serverIP), serverPort);
-                Console.WriteLine("Успешное подключение к серверу");
-
-                // Запуск фоновую задачу для приема сообщений
-                Task.Run(() => ReceiveMessages());
+                await sckt.ConnectAsync(IPAddress.Parse(serverIP), serverPort);
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Ошибка подключения: {ex.Message}");
             }
         }
-
-        public async Task SendAsync(string message)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(message);
-
-            if (data.Length <= maxBlockSize)
-            {
-                // Если размер сообщения не превышает максимальный размер, отправляем его как единое целое
-                await socket.SendAsync(new ArraySegment<byte>(data), SocketFlags.None);
-            }
-            else
-            {
-                // Если размер сообщения превышает максимальный размер, разделяем его на части и отправляем по отдельности
-                int totalChunks = (int)Math.Ceiling((double)data.Length / maxBlockSize);
-
-                for (int i = 0; i < totalChunks; i++)
-                {
-                    int offset = i * maxBlockSize;
-                    int length = Math.Min(maxBlockSize, data.Length - offset);
-                    byte[] chunk = new byte[length];
-                    Array.Copy(data, offset, chunk, 0, length);
-
-                    await socket.SendAsync(new ArraySegment<byte>(chunk), SocketFlags.None);
-                }
-            }
-        }
+        
 
         public async Task ReceiveKeys()
         {
             byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
-            Console.WriteLine("123");
+            Console.WriteLine(buffer);
             
             while (true)
             {
-                
-                int bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                int bytesRead = await sckt.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                Console.WriteLine(bytesRead);
                 if (bytesRead > 0)
                 {
                     // Получение сообщения 
@@ -86,7 +61,7 @@ namespace consoleAPp
                         // Продолжаем получать части сообщения
                         while (bytesRead == buffer.Length)
                         {
-                            bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                            bytesRead = await sckt.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
                             receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                             fullMessage.Append(receivedMessage);
                         }
@@ -108,11 +83,11 @@ namespace consoleAPp
 
         public async Task ReceiveMessages()
         {
-            byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
-
             while (true)
             {
-                int bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
+
+                int bytesRead = await sckt.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
 
                 if (bytesRead > 0)
                 {
@@ -127,21 +102,77 @@ namespace consoleAPp
                         // Продолжаем получать части сообщения
                         while (bytesRead == buffer.Length)
                         {
-                            bytesRead = await socket.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
+                            bytesRead = await sckt.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
                             receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                             fullMessage.Append(receivedMessage);
+
                         }
 
                         receivedMessage = fullMessage.ToString();
                     }
+
+                    // Обработка полученного сообщения
+                    if (HandleReceivedMessage(receivedMessage))
+                        break;
+                }
+            }
+        }
+
+        private bool HandleReceivedMessage(string message)
+        {
+            string[] MessageParts = message.Split(new char[] { ' ' }, 2);
+            string sys = MessageParts[0];
+            if(sys == "auth")
+                SetText(MessageParts[1]); 
+            if(sys == "errorChatName")
+                SetText(MessageParts[1]);
+            return true ;
+        }
+
+        private string text;
+
+        // Метод для присваивания значения переменной
+        public void SetText(string value)
+        {
+            text = value;
+        }
+
+        // Метод для получения значения переменной
+        public string GetText()
+        {
+            return text;
+        }
+
+        public async Task SendAsync(string message)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(message);
+
+            if (data.Length <= maxBlockSize)
+            {
+                // Если размер сообщения не превышает максимальный размер, отправляем его как единое целое
+                await sckt.SendAsync(new ArraySegment<byte>(data), SocketFlags.None);
+            }
+            else
+            {
+                // Если размер сообщения превышает максимальный размер, разделяем его на части и отправляем по отдельности
+                int totalChunks = (int)Math.Ceiling((double)data.Length / maxBlockSize);
+
+                for (int i = 0; i < totalChunks; i++)
+                {
+                    int offset = i * maxBlockSize;
+                    int length = Math.Min(maxBlockSize, data.Length - offset);
+                    byte[] chunk = new byte[length];
+                    Array.Copy(data, offset, chunk, 0, length);
+
+                    await sckt.SendAsync(new ArraySegment<byte>(chunk), SocketFlags.None);
                 }
             }
         }
 
         public async Task CloseAsync()
         {
-            socket.Shutdown(SocketShutdown.Both);
-            socket.Close();
+            sckt.Shutdown(SocketShutdown.Both);
+            await Task.Run(() => sckt.Close());
         }
 
     }
