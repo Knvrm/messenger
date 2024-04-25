@@ -43,11 +43,13 @@ namespace consoleAPp
         }
         public static bool SqlQueryCheckLoginAndPassword(string login, string passwd, MySqlConnection connection)
         {
+            // TODO: fix sql-injenction
+            // hash + salt
             string sql = $"SELECT login, password FROM mydb.users WHERE login = \"{login}\" and password = \"{passwd}\"";
             MySqlCommand command = new MySqlCommand(sql, connection);
 
             MySqlDataReader reader = command.ExecuteReader();
-
+            // using auto close
             if (reader.HasRows)
             {
                 reader.Close();

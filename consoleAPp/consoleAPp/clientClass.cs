@@ -54,12 +54,12 @@ namespace consoleAPp
                     string receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
 
                     // Если сообщение превышает максимальный размер, оно приходит частями и нужна сборка
-                    if (bytesRead == buffer.Length)
+                    if (bytesRead == buffer.Length) // ?????????????????????
                     {
                         StringBuilder fullMessage = new StringBuilder(receivedMessage);
 
                         // Продолжаем получать части сообщения
-                        while (bytesRead == buffer.Length)
+                        while (bytesRead == buffer.Length)//????????
                         {
                             bytesRead = await sckt.ReceiveAsync(new ArraySegment<byte>(buffer), SocketFlags.None);
                             receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
@@ -71,9 +71,8 @@ namespace consoleAPp
 
                         // Получение ключа
 
-                        BigInteger receivedKey = BigInteger.Parse(receivedMessage);
-
-                        Console.WriteLine("B " + receivedKey.ToString());
+                        BigInteger receivedKey = BigInteger.Parse(receivedMessage); // BI to byte array, not string
+                        Console.WriteLine("B " + receivedKey);
                         B = receivedMessage;
                     }
                 }
@@ -109,6 +108,7 @@ namespace consoleAPp
                         }
 
                         receivedMessage = fullMessage.ToString();
+                        
                     }
 
                     // Обработка полученного сообщения

@@ -11,7 +11,6 @@ using System.Data.Common;
 
 namespace consoleAPp
 {
-
     internal class Server
     {
         static async Task Main(string[] args) 

@@ -18,7 +18,7 @@ namespace consoleAPp
             {
                 a += Convert.ToString(rnd.Next(0, 2));
             }
-
+            //BigInteger.Parse()
             char[] a_reverse = a.ToCharArray();
             Array.Reverse(a_reverse);
             a = new string(a_reverse);
@@ -29,7 +29,8 @@ namespace consoleAPp
             {
                 b += BigInteger.Pow(2, i) * Convert.ToInt32(Convert.ToString(a[i]));
             }
-            return BigInteger.Abs(b);
+           
+            return BigInteger.Abs(b);//b could be negative?? need to check bit_length
         }
 
         static public async Task<BigInteger> GenerateParamsAsync(string message, List<Socket> clients)
