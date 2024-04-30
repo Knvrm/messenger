@@ -3,16 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|c:\\users\\roman\\desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleapp\\consoleapp\\diffie-hellman.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleapp\\diffie-hellman.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{BF5C402D-F430-487C-A5B9-DF24246FA3EB}|tcpClient\\tcpClient.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\tcpclient\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{BF5C402D-F430-487C-A5B9-DF24246FA3EB}|tcpClient\\tcpClient.csproj|solutionrelative:tcpclient\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleapp\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleapp\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleapp\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleapp\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleapp\\sql.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -23,8 +19,12 @@
       "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleAPp\\serverClass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleAPp\\Server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|c:\\users\\roman\\desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleapp\\consoleapp\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleapp\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleapp\\diffie-hellman.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{623AD1B8-EA72-4909-BA39-363C9DC8313D}|consoleAPp\\ServerTcp.csproj|solutionrelative:consoleapp\\diffie-hellman.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,84 +34,84 @@
       "DocumentGroups": [
         {
           "DockedWidth": 269,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Client.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\tcpClient\\Client.cs",
               "RelativeDocumentMoniker": "tcpClient\\Client.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\tcpClient\\Client.cs",
               "RelativeToolTip": "tcpClient\\Client.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAjwBcAAAAMAAAA",
+              "ViewState": "AQIAAAoAAAAAAAAAAAAqwBgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.417Z"
+              "WhenOpened": "2024-04-19T00:08:34.417Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "clientClass.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\clientClass.cs",
               "RelativeDocumentMoniker": "consoleAPp\\clientClass.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\clientClass.cs",
               "RelativeToolTip": "consoleAPp\\clientClass.cs",
-              "ViewState": "AQIAAH4AAAAAAAAAAAAowIMAAAAZAAAA",
+              "ViewState": "AQIAABQAAAAAAAAAAAAAwCQAAABHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.473Z"
+              "WhenOpened": "2024-04-19T00:08:34.473Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "Server.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Server.cs",
               "RelativeDocumentMoniker": "consoleAPp\\Server.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Server.cs",
               "RelativeToolTip": "consoleAPp\\Server.cs",
-              "ViewState": "AQIAAAkAAAAAAAAAAAAAAAwAAAABAAAA",
+              "ViewState": "AQIAAAYAAAAAAAAAAAAAABQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.475Z"
+              "WhenOpened": "2024-04-19T00:08:34.475Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 3,
               "Title": "serverClass.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\serverClass.cs",
               "RelativeDocumentMoniker": "consoleAPp\\serverClass.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\serverClass.cs",
               "RelativeToolTip": "consoleAPp\\serverClass.cs",
-              "ViewState": "AQIAAA8AAAAAAAAAAAAAABQAAAAiAAAA",
+              "ViewState": "AQIAAAwAAAAAAAAAAAAAABIAAAAIAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.477Z"
+              "WhenOpened": "2024-04-19T00:08:34.477Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "Sql.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Sql.cs",
               "RelativeDocumentMoniker": "consoleAPp\\Sql.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Sql.cs",
               "RelativeToolTip": "consoleAPp\\Sql.cs",
-              "ViewState": "AQIAAEkAAAAAAAAAAAAmwEoAAAAaAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAEoAAAAaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.48Z"
+              "WhenOpened": "2024-04-19T00:08:34.48Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "Diffie-Hellman.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Diffie-Hellman.cs",
               "RelativeDocumentMoniker": "consoleAPp\\Diffie-Hellman.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\consoleAPp\\consoleAPp\\Diffie-Hellman.cs",
               "RelativeToolTip": "consoleAPp\\Diffie-Hellman.cs",
-              "ViewState": "AQIAABsAAAAAAAAAAAAmwBcAAAAfAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-19T00:08:34.681Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-19T00:08:34.681Z"
             }
           ]
         }

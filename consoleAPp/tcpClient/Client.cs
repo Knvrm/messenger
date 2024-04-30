@@ -31,7 +31,6 @@ namespace tcpClient
                 string UserAutentification = Console.ReadLine();
                 if (UserAutentification != "")
                 {
-                    
                     await client.SendAsync(UserAutentification);
                     await client.ReceiveMessages();
                     result = client.GetText();

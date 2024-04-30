@@ -13,9 +13,42 @@ C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellma
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Diffie-Hellman Protocol.exe
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Diffie-Hellman Protocol.pdb
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-Hellman Protocol.csproj.AssemblyReference.cache
-C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Form1.resources
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Properties.Resources.resources
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-Hellman Protocol.csproj.GenerateResource.cache
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-Hellman Protocol.csproj.CoreCompileInputs.cache
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-Hellman Protocol.exe
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-Hellman Protocol.pdb
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Client.resources
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\BouncyCastle.Cryptography.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Google.Protobuf.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\MySql.Data.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Buffers.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Diagnostics.DiagnosticSource.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.IO.Pipelines.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Memory.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\ZstdSharp.dll
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\BouncyCastle.Cryptography.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Google.Protobuf.pdb
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Google.Protobuf.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\Microsoft.Bcl.AsyncInterfaces.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\MySql.Data.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Buffers.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Diagnostics.DiagnosticSource.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.IO.Pipelines.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Memory.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-H.A8A2B40E.Up2Date
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Server.resources

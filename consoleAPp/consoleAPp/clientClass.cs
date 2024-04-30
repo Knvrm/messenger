@@ -38,7 +38,6 @@ namespace consoleAPp
             }
         }
         
-
         public async Task ReceiveKeys()
         {
             byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных

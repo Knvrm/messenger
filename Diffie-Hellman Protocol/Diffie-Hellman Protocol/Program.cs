@@ -16,7 +16,18 @@ namespace Diffie_Hellman_Protocol
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Server mainForm = new Server();
+            Client secondForm = new Client();
+
+            mainForm.Show();
+            secondForm.Show();
+
+            Application.Run(mainForm); // Используем mainForm в качестве основной формы
+
+            // После закрытия mainForm выполним выход из приложения
+            Application.ApplicationExit += (sender, e) =>
+            {    
+            };
         }
     }
 }

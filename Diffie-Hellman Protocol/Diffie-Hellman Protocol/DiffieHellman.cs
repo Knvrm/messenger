@@ -7,13 +7,6 @@ namespace Diffie_Hellman_Protocol
 {
     internal class DiffieHellman
     {
-        private static int bit = 32; // static is bad???
-        public static int Bit
-        {
-            get { return bit; }
-            private set { bit = value; }
-        }
-
         public static BigInteger FindPrimitiveRoot(BigInteger p)
         {
             BigInteger q = 2 * p + 1;
@@ -37,7 +30,23 @@ namespace Diffie_Hellman_Protocol
             return -1;
         }
 
-        public static BigInteger GenerateParametr(BigInteger x, BigInteger y, BigInteger p)
+        public static BigInteger[] GenerateFirstPublicParams(int bit)
+        {
+            BigInteger[] paramsArray = new BigInteger[2];
+            do
+            {
+                paramsArray[0] = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
+                paramsArray[1] = FindPrimitiveRoot(paramsArray[0]);
+            }
+            while (paramsArray[1] == -1);
+            return paramsArray;
+        }
+        public static BigInteger GenerateSecondPublicParam(int bit)
+        {
+            return PrimeNumberUtils.GenerateBigInteger(bit);
+        }
+
+        public static BigInteger CalculateKey(BigInteger x, BigInteger y, BigInteger p)
         {
             return BigInteger.ModPow(x, y, p);
         }
