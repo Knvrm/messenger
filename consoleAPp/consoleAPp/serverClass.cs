@@ -32,9 +32,9 @@ namespace consoleAPp
             listener.Listen(10); // Максимальное количество ожидающих клиентов
 
             string connectionString = "server=localhost;database=mydb;user=root;password=root";
-            connection = new MySqlConnection(connectionString);
+           /* connection = new MySqlConnection(connectionString);
             connection.ConnectionString = connectionString;
-            connection.Open();
+            connection.Open();*/
 
             while (true)
             {

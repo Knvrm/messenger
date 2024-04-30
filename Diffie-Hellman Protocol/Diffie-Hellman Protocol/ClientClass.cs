@@ -8,21 +8,24 @@ using System.Threading.Tasks;
 
 namespace Diffie_Hellman_Protocol
 {
-    internal class ClientClass
+    public class ClientClass
     {
         const int maxBlockSize = 1024; // Максимальный размер сообщения для отправки как единое целое
-        public Socket sckt;
+        public TcpClient client;
         public string B;
+        public NetworkStream stream;
 
         //Создание сокета нужного типа
         public ClientClass()
         {
-            sckt = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            client = new TcpClient();
         }
 
-        public string Connect(string serverIP, int serverPort)
+        public void ConnectAsync(string serverIP, int serverPort)
         {
-            try
+            client.ConnectAsync(serverIP, serverPort).Wait();
+            stream = client.GetStream();
+            /*try
             {
                 sckt.Connect(IPAddress.Parse(serverIP), serverPort);
                 return "Успешное подключение к серверу";
@@ -30,10 +33,10 @@ namespace Diffie_Hellman_Protocol
             catch (Exception ex)
             {
                 return ex.Message;
-            }
+            }*/
         }
 
-        public void SendAsync(string message)
+        /*public void SendAsync(string message)
         {
             byte[] data = Encoding.UTF8.GetBytes(message);
 
@@ -89,6 +92,6 @@ namespace Diffie_Hellman_Protocol
                     }
                 }
             }
-        }
+        }*/
     }
 }

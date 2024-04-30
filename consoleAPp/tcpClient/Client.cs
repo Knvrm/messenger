@@ -32,7 +32,7 @@ namespace tcpClient
                 if (UserAutentification != "")
                 {
                     await client.SendAsync(UserAutentification);
-                    await client.ReceiveMessages();
+                    client.ReceiveMessages().Wait();
                     result = client.GetText();
                 }
                 Console.WriteLine(result);
@@ -48,7 +48,7 @@ namespace tcpClient
                         {
                             Console.WriteLine("Введите ваше сообщение в формате <Название чата, которому хотите отправить сообщение> <Текст сообщения>:");
                             await client.SendAsync(Console.ReadLine());
-                            await client.ReceiveMessages();;
+                            client.ReceiveMessages().Wait();
                         }
                         else if (userInput == "2")
                         {

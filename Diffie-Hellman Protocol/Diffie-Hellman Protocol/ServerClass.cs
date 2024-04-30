@@ -11,27 +11,29 @@ using System.Threading;
 
 namespace Diffie_Hellman_Protocol
 {
-    partial class Server
+    public class ServerClass
     {
         const int maxBlockSize = 1024; // Максимальный размер сообщения для отправки как единое целое
-        private Socket listener;
-        private List<Socket> clients = new List<Socket>();
+        private TcpListener listener;
+        public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
 
-        public Server(string ipAddress, int port)
+        public ServerClass(string ipAddress, int port)
         {
-            listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            listener.Bind(new IPEndPoint(IPAddress.Parse(ipAddress), port));
+            listener = new TcpListener(IPAddress.Parse(ipAddress), port);
         }
 
         public async Task StartServerAsync()
         {
-            listener.Listen(1); // Максимальное количество ожидающих клиентов
+            listener.Start();
+            
             while (true)
             {
-                Socket client = await listener.AcceptAsync();
-                clients.Add(client);
-                break;
+                // подключение клиента
+                TcpClient client = await listener.AcceptTcpClientAsync();
+
+                // обслуживание нового клиента
+                await Task.Run(async () => await HandleClientAsync(client));
             }
 
             /*while (true)
@@ -52,33 +54,60 @@ namespace Diffie_Hellman_Protocol
             connection.Close();
             Console.WriteLine("Connection closed.");*/
         }
-        public void Send(string message)
+
+        private async Task HandleClientAsync(TcpClient client)
         {
-            byte[] data = Encoding.UTF8.GetBytes(message);
+            var stream = client.GetStream();
+            clients.Add(stream);
 
-            if (data.Length <= maxBlockSize)
+            // буфер для входящих данных
+            var response = new List<byte>();
+            int bytesRead = 10;
+            while (true)
             {
-                // Если размер сообщения не превышает максимальный размер, отправляем его как единое целое
-                clients[0].Send(data, SocketFlags.None);
-            }
-            else
-            {
-                // Если размер сообщения превышает максимальный размер, разделяем его на части и отправляем по отдельности
-                int totalChunks = (int)Math.Ceiling((double)data.Length / maxBlockSize);
-
-                for (int i = 0; i < totalChunks; i++)
+                // считываем данные до конечного символа
+                while ((bytesRead = stream.ReadByte()) != '\n')
                 {
-                    int offset = i * maxBlockSize;
-                    int length = Math.Min(maxBlockSize, data.Length - offset);
-                    byte[] chunk = new byte[length];
-                    Array.Copy(data, offset, chunk, 0, length);
-
-                    clients[0].Send(chunk, SocketFlags.None);
+                    // добавляем в буфер
+                    response.Add((byte)bytesRead);
                 }
-            }
-        }
+                var word = Encoding.UTF8.GetString(response.ToArray());
 
-        public string ReceiveMessages()
+                // если прислан маркер окончания взаимодействия,
+                // выходим из цикла и завершаем взаимодействие с клиентом
+                if (word == "END") break;
+                
+                response.Clear();
+            }
+            client.Close();
+        }
+        /*public void Send(string message)
+{
+   byte[] data = Encoding.UTF8.GetBytes(message);
+
+   if (data.Length <= maxBlockSize)
+   {
+       // Если размер сообщения не превышает максимальный размер, отправляем его как единое целое
+       clients[0].Send(data, SocketFlags.None);
+   }
+   else
+   {
+       // Если размер сообщения превышает максимальный размер, разделяем его на части и отправляем по отдельности
+       int totalChunks = (int)Math.Ceiling((double)data.Length / maxBlockSize);
+
+       for (int i = 0; i < totalChunks; i++)
+       {
+           int offset = i * maxBlockSize;
+           int length = Math.Min(maxBlockSize, data.Length - offset);
+           byte[] chunk = new byte[length];
+           Array.Copy(data, offset, chunk, 0, length);
+
+           clients[0].Send(chunk, SocketFlags.None);
+       }
+   }
+}*/
+
+        /*public string ReceiveMessages()
         {
             byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
 
@@ -107,6 +136,6 @@ namespace Diffie_Hellman_Protocol
                 }
             }
             return "Сообщение не получено";
-        }
+        }*/
     }
 }

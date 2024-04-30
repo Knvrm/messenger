@@ -5,37 +5,47 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Diffie_Hellman_Protocol.DiffieHellman;
+using static Diffie_Hellman_Protocol.Server;
 
 namespace Diffie_Hellman_Protocol
 {
     public partial class Server : Form
     {
         BigInteger a, b, g, p;
-        Server srv;
+        public ServerClass srv;
 
         public Server()
         {
             InitializeComponent();
-            const string ip = "127.0.0.1";
-            const int port = 8081;
-            srv = new Server(ip, port);
+            InitializeAsync();
         }
 
-        public async Task StartServer1(Server srv)
+        private async void InitializeAsync()
+        {
+            const string ip = "127.0.0.1";
+            const int port = 8081;
+
+            srv = new ServerClass(ip, port);
+            await srv.StartServerAsync();
+        }
+
+        /*public async Task StartServer(ServerClass srv)
         {
             await srv.StartServerAsync();
-            richTextBox1.Text += "Сервер запущен!";
-        }
-        private async void Generate_Click(object sender, EventArgs e)
+        }*/
+
+        private void Generate_Click(object sender, EventArgs e)
         {
-            await StartServer1(srv);
-            int bit = 512;
+            
+            int bit = 256;
 
             BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
             p = paramsArray[0];
@@ -49,10 +59,13 @@ namespace Diffie_Hellman_Protocol
                 b = DiffieHellman.GenerateSecondPublicParam(bit);
             while (b >= p);
             InputP.Text = p.ToString();
+            byte[] data = Encoding.UTF8.GetBytes(p.ToString() + '\n');
+            srv.clients[0].WriteAsync(data, 0, data.Length);
+            richTextBox1.Text += "Данные отправлены";
             InputG.Text = g.ToString();
             InputA.Text = a.ToString();
             InputB.Text = b.ToString();
-            srv.clients[0].Send(p.ToByteArray());
+           
         }
        
 

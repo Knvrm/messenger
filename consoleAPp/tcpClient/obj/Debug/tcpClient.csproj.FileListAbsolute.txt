@@ -35,3 +35,40 @@ C:\Users\User\OneDrive - Казанский (Приволжский) Федер�
 C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.IO.Pipelines.xml
 C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Hash.xxHash.xml
 C:\Users\User\OneDrive - Казанский (Приволжский) Федеральный Университет\Рабочий стол\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.exe.config
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.exe
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\tcpClient.pdb
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.exe
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\MySql.Data.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\Google.Protobuf.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\ZstdSharp.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Compression.LZ4.Streams.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\BouncyCastle.Cryptography.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Memory.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Threading.Tasks.Extensions.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Buffers.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Compression.LZ4.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.IO.Pipelines.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Hash.xxHash.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Numerics.Vectors.dll
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.pdb
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\consoleAPp.exe.config
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\MySql.Data.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\Google.Protobuf.pdb
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\Google.Protobuf.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Compression.LZ4.Streams.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\BouncyCastle.Cryptography.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Memory.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Threading.Tasks.Extensions.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Buffers.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Compression.LZ4.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.IO.Pipelines.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\K4os.Hash.xxHash.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\bin\Debug\System.Numerics.Vectors.xml
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.AssemblyReference.cache
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.CoreCompileInputs.cache
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.csproj.Up2Date
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.exe
+C:\Users\Roman\Desktop\#1\курсовая\consoleAPp\tcpClient\obj\Debug\tcpClient.pdb
