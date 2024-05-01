@@ -1,5 +1,6 @@
 ﻿using MySqlX.XDevAPI;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -7,10 +8,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Diffie_Hellman_Protocol.NetworkStreamManager;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -19,6 +22,7 @@ namespace Diffie_Hellman_Protocol
         ClientClass client;
         const string serverIP = "127.0.0.1"; // IP адрес сервера
         const int serverPort = 8081; // Порт сервера
+
         public Client()
         {
             InitializeComponent();
@@ -28,46 +32,45 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
-            while (true)
-            {
-                //string res = client.ReceiveMessages();
-                //richTextBox1.Text += res;
-            }
+            
         }
 
         private async void Client_Load(object sender, EventArgs e)
         {
             await Task.Run(() =>
             {
-                var response = new List<byte>();
-                int bytesRead;
-                while (true)
-                {
-                    // считываем данные до конечного символа
-                    while((bytesRead = client.stream.ReadByte()) != '\n')
-                    {
-                        // добавляем в буфер
-                        response.Add((byte)bytesRead);
-                    }
-                    var translation = Encoding.UTF8.GetString(response.ToArray());
-                    UpdateRichTextBox(translation);
-                    response.Clear();
-                }
+                string getParams = "GET_DH_P_G";
+                byte[] data = Encoding.UTF8.GetBytes(getParams + "\n");
+                Send(client.stream, data);
+
+                data = ReceiveStream(client.stream);
+                BigInteger p = new BigInteger(data);
+
+                data = ReceiveStream(client.stream);
+                BigInteger g = new BigInteger(data);
+
+                Console.WriteLine("Client P: " + p.ToString());
+                Console.WriteLine("Client G: " + g.ToString());
+
+                BigInteger a = DiffieHellman.GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
+                BigInteger A = DiffieHellman.CalculateKey(g, a, p);
+                Console.WriteLine("Client a:" + a.ToString());
+                Console.WriteLine("Client gen A:" + A.ToString());
+                data = A.ToByteArray();
+                Send(client.stream, data);
+                
+                data = ReceiveStream(client.stream);
+                BigInteger B = new BigInteger(data);
+                Console.WriteLine("Client receiver B:" + B.ToString());
+
+                BigInteger k = DiffieHellman.CalculateKey(B, a, p);
+                Console.WriteLine("Client calculate k:" + k.ToString());
             });
         }
+        
         private void UpdateRichTextBox(string text)
         {
-            if (richTextBox1.InvokeRequired)
-            {
-                richTextBox1.Invoke((MethodInvoker)delegate
-                {
-                    richTextBox1.Text += text;
-                });
-            }
-            else
-            {
-                richTextBox1.Text += text;
-            }
+            richTextBox1.Text += text;
         }
     }
 }

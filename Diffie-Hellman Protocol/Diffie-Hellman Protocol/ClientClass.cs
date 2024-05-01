@@ -25,73 +25,19 @@ namespace Diffie_Hellman_Protocol
         {
             client.ConnectAsync(serverIP, serverPort).Wait();
             stream = client.GetStream();
-            /*try
-            {
-                sckt.Connect(IPAddress.Parse(serverIP), serverPort);
-                return "Успешное подключение к серверу";
-            }
-            catch (Exception ex)
-            {
-                return ex.Message;
-            }*/
         }
 
-        /*public void SendAsync(string message)
+/*        public byte[] ReadStream()
         {
-            byte[] data = Encoding.UTF8.GetBytes(message);
-
-            if (data.Length <= maxBlockSize)
+            var buffer = new List<byte>();
+            int bytesRead = 10;
+            // считываем данные до конечного символа
+            while ((bytesRead = stream.ReadByte()) != -1)
             {
-                // Если размер сообщения не превышает максимальный размер, отправляем его как единое целое
-                sckt.Send(data, SocketFlags.None);
+                // добавляем в буфер
+                buffer.Add((byte)bytesRead);
             }
-            else
-            {
-                // Если размер сообщения превышает максимальный размер, разделяем его на части и отправляем по отдельности
-                int totalChunks = (int)Math.Ceiling((double)data.Length / maxBlockSize);
-
-                for (int i = 0; i < totalChunks; i++)
-                {
-                    int offset = i * maxBlockSize;
-                    int length = Math.Min(maxBlockSize, data.Length - offset);
-                    byte[] chunk = new byte[length];
-                    Array.Copy(data, offset, chunk, 0, length);
-
-                    sckt.Send(chunk, SocketFlags.None);
-                }
-            }
-        }
-        public string ReceiveMessages()
-        {
-            while (true)
-            {
-                byte[] buffer = new byte[maxBlockSize]; // Буфер для приема данных
-
-                int bytesRead = sckt.Receive(buffer, SocketFlags.None);
-
-                if (bytesRead > 0)
-                {
-                    // Получение сообщения 
-                    string receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-
-                    // Если сообщение превышает максимальный размер, оно приходит частями и нужна сборка
-                    if (bytesRead == buffer.Length)
-                    {
-                        StringBuilder fullMessage = new StringBuilder(receivedMessage);
-
-                        // Продолжаем получать части сообщения
-                        while (bytesRead == buffer.Length)
-                        {
-                            bytesRead = sckt.Receive(buffer, SocketFlags.None);
-                            receivedMessage = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                            fullMessage.Append(receivedMessage);
-
-                        }
-
-                        receivedMessage = fullMessage.ToString();
-                    }
-                }
-            }
+            return buffer.ToArray();
         }*/
     }
 }

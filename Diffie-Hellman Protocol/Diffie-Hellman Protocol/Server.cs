@@ -37,19 +37,10 @@ namespace Diffie_Hellman_Protocol
             await srv.StartServerAsync();
         }
 
-        /*public async Task StartServer(ServerClass srv)
-        {
-            await srv.StartServerAsync();
-        }*/
-
         private void Generate_Click(object sender, EventArgs e)
         {
-            
             int bit = 256;
 
-            BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
-            p = paramsArray[0];
-            g = paramsArray[1];
 
             do
                 a = DiffieHellman.GenerateSecondPublicParam(bit);
@@ -59,13 +50,11 @@ namespace Diffie_Hellman_Protocol
                 b = DiffieHellman.GenerateSecondPublicParam(bit);
             while (b >= p);
             InputP.Text = p.ToString();
-            byte[] data = Encoding.UTF8.GetBytes(p.ToString() + '\n');
-            srv.clients[0].WriteAsync(data, 0, data.Length);
-            richTextBox1.Text += "Данные отправлены";
             InputG.Text = g.ToString();
             InputA.Text = a.ToString();
             InputB.Text = b.ToString();
-           
+            //InputA.Text += srv.g1.ToString();
+
         }
        
 
