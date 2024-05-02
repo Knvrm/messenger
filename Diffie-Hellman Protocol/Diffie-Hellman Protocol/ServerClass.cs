@@ -13,7 +13,7 @@ using System.Numerics;
 using static Diffie_Hellman_Protocol.DiffieHellman;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
 using System.Windows.Forms;
-using System.Runtime.InteropServices;
+using System.Data;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -33,7 +33,21 @@ namespace Diffie_Hellman_Protocol
         public async Task StartServerAsync()
         {
             listener.Start();
-            
+
+            string connectionString = "server=localhost;port=3307;database=mydb;user=root;password=root";
+            connection = new MySqlConnection(connectionString);
+            connection.ConnectionString = connectionString;
+            connection.Open();
+            if (connection.State == ConnectionState.Open)
+            {
+                Console.WriteLine("Подключение к базе данных успешно установлено.");
+                // Ваш код работы с базой данных здесь
+            }
+            else
+            {
+                Console.WriteLine("Не удалось подключиться к базе данных.");
+            }
+
             while (true)
             {
                 // подключение клиента
@@ -85,11 +99,5 @@ namespace Diffie_Hellman_Protocol
 
             client.Close();
         }
-
     }
-
-    /*string connectionString = "server=localhost;database=mydb;user=root;password=root";
-            connection = new MySqlConnection(connectionString);
-            connection.ConnectionString = connectionString;
-            connection.Open();*/
 }

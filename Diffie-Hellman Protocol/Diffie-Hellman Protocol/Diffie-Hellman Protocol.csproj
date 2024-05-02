@@ -105,6 +105,7 @@
       <DependentUpon>Client.cs</DependentUpon>
     </Compile>
     <Compile Include="ClientClass.cs" />
+    <Compile Include="DBManager.cs" />
     <Compile Include="NetworkStreamManager.cs" />
     <Compile Include="PrimeNumberUtils.cs" />
     <Compile Include="DiffieHellman.cs" />

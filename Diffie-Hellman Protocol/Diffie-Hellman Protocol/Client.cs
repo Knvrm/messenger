@@ -32,6 +32,15 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(richTextBox1.Text == "")
+                MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else if (richTextBox2.Text == "")
+                MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            else
+            {
+                string login = richTextBox1.Text;
+                string password = richTextBox2.Text;
+            }
             
         }
 
