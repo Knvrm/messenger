@@ -106,6 +106,12 @@
     </Compile>
     <Compile Include="ClientClass.cs" />
     <Compile Include="DBManager.cs" />
+    <Compile Include="Messenger.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Messenger.Designer.cs">
+      <DependentUpon>Messenger.cs</DependentUpon>
+    </Compile>
     <Compile Include="NetworkStreamManager.cs" />
     <Compile Include="PrimeNumberUtils.cs" />
     <Compile Include="DiffieHellman.cs" />
@@ -120,6 +126,9 @@
     <Compile Include="ServerClass.cs" />
     <EmbeddedResource Include="Client.resx">
       <DependentUpon>Client.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Messenger.resx">
+      <DependentUpon>Messenger.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Server.resx">
       <DependentUpon>Server.cs</DependentUpon>

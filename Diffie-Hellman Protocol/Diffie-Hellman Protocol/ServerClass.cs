@@ -70,11 +70,8 @@ namespace Diffie_Hellman_Protocol
                 switch (text)
                 {
                     case "GEN_KEY":
-                        if (!GenerateKey(stream)) 
-                        {
-                            Console.WriteLine("Сервер сгенерировал");
+                        if (GenerateKey(stream)) 
                             Send(stream, "SUCCESFUL_GEN");
-                        }
                         else
                             Send(stream, "FAILURE_GEN");
                         break;
@@ -90,6 +87,9 @@ namespace Diffie_Hellman_Protocol
                         stream.Close();
                         client.Close();
                         return;
+                    case "REGISTRATION":
+                        //
+                        break;
                     default:
                         Console.WriteLine("Получено сообщение от клиента " + text);
                         // Обработка неизвестных сообщений

@@ -52,3 +52,4 @@ C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellma
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\bin\Debug\System.Threading.Tasks.Extensions.xml
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie-H.A8A2B40E.Up2Date
 C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Server.resources
+C:\Users\Roman\Desktop\#1\курсовая\Diffie-Hellman Protocol\Diffie-Hellman Protocol\obj\Debug\Diffie_Hellman_Protocol.Messenger.resources

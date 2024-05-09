@@ -49,6 +49,9 @@ namespace Diffie_Hellman_Protocol
                     if (msg == "SUCCESFUL_AUTH")
                     {
                         Console.WriteLine("Успешная авторизация");
+                        Messenger form = new Messenger();
+                        form.Show();
+                        this.Close();
                         break;
                     }
                     else if (msg == "FAILURE_AUTH")
@@ -126,6 +129,11 @@ namespace Diffie_Hellman_Protocol
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
             Send(client.stream, "CLIENT_CLOSED");
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Send(client.stream, "REGISTRATION");
         }
     }
 }
