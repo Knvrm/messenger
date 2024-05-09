@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -17,8 +18,16 @@ namespace Diffie_Hellman_Protocol
 
             stream.WriteAsync(data, 0, data.Length).Wait();
         }
+        public static void Send(NetworkStream stream, BigInteger x)
+        {
+            byte[] data = x.ToByteArray();
+            byte[] lengthBytes = BitConverter.GetBytes(data.Length);
+            stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
 
-        public static byte[] ReceiveStream(NetworkStream stream)
+            stream.WriteAsync(data, 0, data.Length).Wait();
+        }
+
+        public static byte[] Receive(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[sizeof(int)];
             stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();
@@ -29,9 +38,9 @@ namespace Diffie_Hellman_Protocol
             stream.ReadAsync(data, 0, data.Length).Wait();
             return data;
         }
-        public static string ReceiveStringFromStream(NetworkStream stream)
+        public static string ReceiveString(NetworkStream stream)
         {
-            byte[] dataBytes = ReceiveStream(stream);
+            byte[] dataBytes = Receive(stream);
             return Encoding.UTF8.GetString(dataBytes);
         }
     }

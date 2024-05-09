@@ -13,7 +13,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Diffie_Hellman_Protocol.DiffieHellman;
-using static Diffie_Hellman_Protocol.Server;
+using static Diffie_Hellman_Protocol.ServerClass;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -39,8 +39,7 @@ namespace Diffie_Hellman_Protocol
 
         private void Generate_Click(object sender, EventArgs e)
         {
-            int bit = 256;
-
+            /*int bit = 16;
 
             do
                 a = DiffieHellman.GenerateSecondPublicParam(bit);
@@ -52,7 +51,9 @@ namespace Diffie_Hellman_Protocol
             InputP.Text = p.ToString();
             InputG.Text = g.ToString();
             InputA.Text = a.ToString();
-            InputB.Text = b.ToString();
+            InputB.Text = b.ToString();*/
+            string text = richTextBox1.Text;
+            NetworkStreamManager.Send(srv.clients[0], Encoding.UTF8.GetBytes(text));
         }
 
         private void Count_Click(object sender, EventArgs e)

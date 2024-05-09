@@ -40,8 +40,9 @@ namespace Diffie_Hellman_Protocol
             {
                 string login = richTextBox1.Text;
                 string password = richTextBox2.Text;
+                Send(client.stream, Encoding.UTF8.GetBytes(login));
             }
-            
+           
         }
 
         private async void Client_Load(object sender, EventArgs e)
@@ -52,10 +53,10 @@ namespace Diffie_Hellman_Protocol
                 byte[] data = Encoding.UTF8.GetBytes(getParams + "\n");
                 Send(client.stream, data);
 
-                data = ReceiveStream(client.stream);
+                data = Receive(client.stream);
                 BigInteger p = new BigInteger(data);
 
-                data = ReceiveStream(client.stream);
+                data = Receive(client.stream);
                 BigInteger g = new BigInteger(data);
 
                 Console.WriteLine("Client P: " + p.ToString());
@@ -65,21 +66,36 @@ namespace Diffie_Hellman_Protocol
                 BigInteger A = DiffieHellman.CalculateKey(g, a, p);
                 Console.WriteLine("Client a:" + a.ToString());
                 Console.WriteLine("Client gen A:" + A.ToString());
-                data = A.ToByteArray();
-                Send(client.stream, data);
+                Send(client.stream, A);
                 
-                data = ReceiveStream(client.stream);
+                data = Receive(client.stream);
                 BigInteger B = new BigInteger(data);
                 Console.WriteLine("Client receiver B:" + B.ToString());
 
                 BigInteger k = DiffieHellman.CalculateKey(B, a, p);
                 Console.WriteLine("Client calculate k:" + k.ToString());
+                while (true)
+                {
+                    string text = ReceiveString(client.stream);
+                    Console.WriteLine("Получено сообщение от сервера " + text);
+                    UpdateRichTextBox(text);
+                }
             });
         }
-        
+
         private void UpdateRichTextBox(string text)
         {
-            richTextBox1.Text += text;
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.Invoke(new Action(() =>
+                {
+                    UpdateRichTextBox(text);
+                }));
+            }
+            else
+            {
+                richTextBox1.AppendText(text + Environment.NewLine);
+            }
         }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)

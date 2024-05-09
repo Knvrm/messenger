@@ -14,6 +14,7 @@ using static Diffie_Hellman_Protocol.DiffieHellman;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
 using System.Windows.Forms;
 using System.Data;
+using static Diffie_Hellman_Protocol.Server;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -22,7 +23,7 @@ namespace Diffie_Hellman_Protocol
         private TcpListener listener;
         public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
-        public int bit = 2048;
+        public int bit = 16;
 
         public ServerClass(string ipAddress, int port)
         {
@@ -66,7 +67,7 @@ namespace Diffie_Hellman_Protocol
             string msg = "";
             while (msg == "")
             {
-                msg = ReceiveStringFromStream(stream);
+                msg = ReceiveString(stream);
             }
             try
             {
@@ -76,22 +77,18 @@ namespace Diffie_Hellman_Protocol
                 Console.WriteLine("Server P: " + p.ToString());
                 Console.WriteLine("Server G: " + g.ToString());
 
-                data = p.ToByteArray();
-                Send(stream, data);
+                Send(stream, p);
+                Send(stream, g);
 
-                data = g.ToByteArray();
-                Send(stream, data);
-
-                data = ReceiveStream(stream);
+                data = Receive(stream);
                 BigInteger A = new BigInteger(data);
                 Console.WriteLine("Server received A:" + A.ToString());
 
                 BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
                 BigInteger B = DiffieHellman.CalculateKey(g, b, p);
                 Console.WriteLine("Server b:" + b.ToString());
-                Console.WriteLine("Server gen B:" + b.ToString());
-                data = B.ToByteArray();
-                Send(stream, data);
+                Console.WriteLine("Server gen B:" + B.ToString());
+                Send(stream, B);
 
                 BigInteger k = DiffieHellman.CalculateKey(A, b, p);
                 Console.WriteLine("Server calculate k:" + k.ToString());
@@ -101,7 +98,13 @@ namespace Diffie_Hellman_Protocol
                 Console.WriteLine("Клиент отключился при генерации общего секретного ключа");
             }
 
-            client.Close();
+            while (true)
+            {
+                string text = ReceiveString(stream);
+                Console.WriteLine("Получено сообщение от клиента" + text);
+                
+            }
+            //client.Close();
         }
     }
 }
