@@ -31,18 +31,14 @@ namespace Diffie_Hellman_Protocol
 
         public static BigInteger[] GenerateFirstPublicParams(int bit)
         {
-            try
+            BigInteger[] paramsArray = new BigInteger[2];
+            do
             {
-                BigInteger[] paramsArray = new BigInteger[2];
-                do
-                {
-                    paramsArray[0] = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
-                }
-                while (!MillerRabinTest(2 * paramsArray[0] + 1, 10));
-                paramsArray[1] = FindPrimitiveRoot(paramsArray[0]);
-                return paramsArray;
+                paramsArray[0] = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
             }
-            catch(Exception ex) { throw; }
+            while (!MillerRabinTest(2 * paramsArray[0] + 1, 10));
+            paramsArray[1] = FindPrimitiveRoot(paramsArray[0]);
+            return paramsArray;
         }
         public static BigInteger GenerateSecondPublicParam(int bit)
         {

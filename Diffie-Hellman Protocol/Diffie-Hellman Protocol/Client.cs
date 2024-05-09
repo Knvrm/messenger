@@ -38,9 +38,27 @@ namespace Diffie_Hellman_Protocol
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
+                Send(client.stream, Encoding.UTF8.GetBytes("AUTH"));
                 string login = richTextBox1.Text;
                 string password = richTextBox2.Text;
-                Send(client.stream, Encoding.UTF8.GetBytes(login));
+                Send(client.stream, Encoding.UTF8.GetBytes("LOGIN " + login));
+                Send(client.stream, Encoding.UTF8.GetBytes("PASSWORD " + login));
+                while(true)
+                {
+                    string msg = ReceiveString(client.stream);
+                    if (msg == "SUCCESFUL_AUTH")
+                    {
+                        Console.WriteLine("Успешная авторизация");
+                        break;
+                    }
+                    else if (msg == "FAILURE_AUTH")
+                    {
+                        MessageBox.Show("Неправильно введен логин или пароль",
+                            "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
+                        
+                }
             }
            
         }
@@ -49,10 +67,8 @@ namespace Diffie_Hellman_Protocol
         {
             await Task.Run(() =>
             {
-                string getParams = "GET_DH_P_G";
-                byte[] data = Encoding.UTF8.GetBytes(getParams + "\n");
-                Send(client.stream, data);
-
+                Send(client.stream, "GEN_KEY");
+                byte[] data;
                 data = Receive(client.stream);
                 BigInteger p = new BigInteger(data);
 
@@ -76,9 +92,18 @@ namespace Diffie_Hellman_Protocol
                 Console.WriteLine("Client calculate k:" + k.ToString());
                 while (true)
                 {
-                    string text = ReceiveString(client.stream);
-                    Console.WriteLine("Получено сообщение от сервера " + text);
-                    UpdateRichTextBox(text);
+                    string msg = ReceiveString(client.stream);
+                    if (msg == "SUCCESFUL_GEN")
+                    {
+                        Console.WriteLine("Успешная генерация ключа");
+                        break;
+                    }
+                    else if (msg == "FAILURE_GEN")
+                    {
+                        MessageBox.Show("Ключ не был сгенерирован",
+                            "Error Diffie-Hellman", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                    }
                 }
             });
         }
@@ -100,7 +125,7 @@ namespace Diffie_Hellman_Protocol
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Send(client.stream, Encoding.UTF8.GetBytes("ClientClosed"));
+            Send(client.stream, "CLIENT_CLOSED");
         }
     }
 }

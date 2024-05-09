@@ -45,11 +45,15 @@ namespace Diffie_Hellman_Protocol
         {
             // TODO: fix sql-injenction
             // hash + salt
-            string sql = $"SELECT login, password FROM mydb.users WHERE login = \"{login}\" and password = \"{passwd}\"";
+            string sql = "SELECT login, password FROM mydb.users WHERE login = @login and password = @passwd";
             MySqlCommand command = new MySqlCommand(sql, connection);
 
+            // добавление параметров
+            command.Parameters.AddWithValue("@login", login);
+            command.Parameters.AddWithValue("@passwd", passwd);
+
             MySqlDataReader reader = command.ExecuteReader();
-            // using auto close
+            
             if (reader.HasRows)
             {
                 reader.Close();

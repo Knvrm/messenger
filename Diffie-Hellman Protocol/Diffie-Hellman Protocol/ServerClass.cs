@@ -15,6 +15,7 @@ using static Diffie_Hellman_Protocol.NetworkStreamManager;
 using System.Windows.Forms;
 using System.Data;
 using static Diffie_Hellman_Protocol.Server;
+using Diffie_Hellman_Protocol;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -62,49 +63,96 @@ namespace Diffie_Hellman_Protocol
         {
             var stream = client.GetStream();
             clients.Add(stream);
-            byte[] data;
-
-            string msg = "";
-            while (msg == "")
-            {
-                msg = ReceiveString(stream);
-            }
-            try
-            {
-                BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
-                BigInteger p = paramsArray[0], g = paramsArray[1];
-
-                Console.WriteLine("Server P: " + p.ToString());
-                Console.WriteLine("Server G: " + g.ToString());
-
-                Send(stream, p);
-                Send(stream, g);
-
-                data = Receive(stream);
-                BigInteger A = new BigInteger(data);
-                Console.WriteLine("Server received A:" + A.ToString());
-
-                BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
-                BigInteger B = DiffieHellman.CalculateKey(g, b, p);
-                Console.WriteLine("Server b:" + b.ToString());
-                Console.WriteLine("Server gen B:" + B.ToString());
-                Send(stream, B);
-
-                BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-                Console.WriteLine("Server calculate k:" + k.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Клиент отключился при генерации общего секретного ключа");
-            }
 
             while (true)
             {
                 string text = ReceiveString(stream);
-                Console.WriteLine("Получено сообщение от клиента" + text);
-                
+                switch (text)
+                {
+                    case "GEN_KEY":
+                        if (!GenerateKey(stream)) 
+                        {
+                            Console.WriteLine("Сервер сгенерировал");
+                            Send(stream, "SUCCESFUL_GEN");
+                        }
+                        else
+                            Send(stream, "FAILURE_GEN");
+                        break;
+                    case "AUTH":
+                        // Вызов функции авторизации
+                        if (Authenticate(stream))
+                            Send(stream, "SUCCESFUL_AUTH");
+                        else
+                            Send(stream, "FAILURE_AUTH");
+                        break;
+                    case "CLIENT_CLOSED":
+                        Console.WriteLine("Клиент отключился");
+                        stream.Close();
+                        client.Close();
+                        return;
+                    default:
+                        Console.WriteLine("Получено сообщение от клиента " + text);
+                        // Обработка неизвестных сообщений
+                        //ProcessUnknownMessage(text);
+                        break;
+                }
+
+
             }
             //client.Close();
+        }
+        public bool Authenticate(NetworkStream stream)
+        {
+            string login = "", password = "";
+            while (true)
+            {
+                string message = ReceiveString(stream);
+
+                if (message.Length >= 5 && message.Substring(0, 5) == "LOGIN")
+                {
+                    login = message.Substring(6);
+                    
+                }
+                else if (message.Length >= 8 && message.Substring(0, 8).ToUpper() == "PASSWORD")
+                {
+                    password = message.Substring(9);  
+                }
+                if (login != "" && password != "") break;
+            }
+            if(!DBManager.SqlQueryCheckLoginAndPassword(login, password, connection))
+                return false;
+            else
+                return true;
+            //Console.WriteLine(login + " " + password);
+        }
+        public bool GenerateKey(NetworkStream stream)
+        {
+            byte[] data;
+            BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
+            BigInteger p = paramsArray[0], g = paramsArray[1];
+
+            Console.WriteLine("Server P: " + p.ToString());
+            Console.WriteLine("Server G: " + g.ToString());
+
+            Send(stream, p);
+            Send(stream, g);
+
+            data = Receive(stream);
+            BigInteger A = new BigInteger(data);
+            Console.WriteLine("Server received A:" + A.ToString());
+
+            BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
+            BigInteger B = DiffieHellman.CalculateKey(g, b, p);
+            Console.WriteLine("Server b:" + b.ToString());
+            Console.WriteLine("Server gen B:" + B.ToString());
+            Send(stream, B);
+
+            BigInteger k = DiffieHellman.CalculateKey(A, b, p);
+            Console.WriteLine("Server calculate k:" + k.ToString());
+            if (k != 0) 
+                return true;
+            else
+                return false;
         }
     }
 }

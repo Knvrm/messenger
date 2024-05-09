@@ -21,10 +21,12 @@ namespace Diffie_Hellman_Protocol
         public static void Send(NetworkStream stream, BigInteger x)
         {
             byte[] data = x.ToByteArray();
-            byte[] lengthBytes = BitConverter.GetBytes(data.Length);
-            stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
-
-            stream.WriteAsync(data, 0, data.Length).Wait();
+            Send(stream, data);
+        }
+        public static void Send(NetworkStream stream, string text)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            Send(stream, data);
         }
 
         public static byte[] Receive(NetworkStream stream)
