@@ -53,10 +53,7 @@ namespace Diffie_Hellman_Protocol
             InputG.Text = g.ToString();
             InputA.Text = a.ToString();
             InputB.Text = b.ToString();
-            //InputA.Text += srv.g1.ToString();
-
         }
-       
 
         private void Count_Click(object sender, EventArgs e)
         {

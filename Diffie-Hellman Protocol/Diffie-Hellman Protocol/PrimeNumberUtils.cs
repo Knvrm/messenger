@@ -27,17 +27,16 @@ namespace Diffie_Hellman_Protocol
 
         public static BigInteger GeneratePrimeNumber(int bit)
         {
-            BigInteger x = GenerateBigInteger(bit);
-            while(GetBitLength(x) == bit)
+            while (true)
             {
+                BigInteger x = GenerateBigInteger(bit);
+
                 if (x % 2 == 0)
                     x++;
 
-                while (!MillerRabinTest(x, BigInteger.Log(x)))
-                    x += 2;
-                x = GenerateBigInteger(bit);
+                if (MillerRabinTest(x, 10))
+                    return x;
             }
-            return x;
         }
         public static int GetBitLength(BigInteger x)
         {

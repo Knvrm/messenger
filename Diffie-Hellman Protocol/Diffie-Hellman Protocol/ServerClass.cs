@@ -19,11 +19,10 @@ namespace Diffie_Hellman_Protocol
 {
     public class ServerClass
     {
-        const int maxBlockSize = 1024; // Максимальный размер сообщения для отправки как единое целое
         private TcpListener listener;
         public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
-        public int bit = 256;
+        public int bit = 2048;
 
         public ServerClass(string ipAddress, int port)
         {
@@ -65,37 +64,42 @@ namespace Diffie_Hellman_Protocol
             byte[] data;
 
             string msg = "";
-            while(msg == "")
+            while (msg == "")
             {
                 msg = ReceiveStringFromStream(stream);
             }
-            
-            BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
-            BigInteger p = paramsArray[0], g = paramsArray[1];
+            try
+            {
+                BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
+                BigInteger p = paramsArray[0], g = paramsArray[1];
 
-            Console.WriteLine("Server P: " + p.ToString());
-            Console.WriteLine("Server G: " + g.ToString());
+                Console.WriteLine("Server P: " + p.ToString());
+                Console.WriteLine("Server G: " + g.ToString());
 
-            data = p.ToByteArray();
-            Send(stream, data);
+                data = p.ToByteArray();
+                Send(stream, data);
 
-            data = g.ToByteArray();
-            Send(stream, data);
+                data = g.ToByteArray();
+                Send(stream, data);
 
-            data = ReceiveStream(stream);
-            BigInteger A = new BigInteger(data);
-            Console.WriteLine("Server received A:" + A.ToString());
+                data = ReceiveStream(stream);
+                BigInteger A = new BigInteger(data);
+                Console.WriteLine("Server received A:" + A.ToString());
 
-            BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
-            BigInteger B = DiffieHellman.CalculateKey(g, b, p);
-            Console.WriteLine("Server b:" + b.ToString());
-            Console.WriteLine("Server gen B:" + b.ToString());
-            data = B.ToByteArray();
-            Send(stream, data);
+                BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
+                BigInteger B = DiffieHellman.CalculateKey(g, b, p);
+                Console.WriteLine("Server b:" + b.ToString());
+                Console.WriteLine("Server gen B:" + b.ToString());
+                data = B.ToByteArray();
+                Send(stream, data);
 
-            BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-            Console.WriteLine("Server calculate k:" + k.ToString());
-
+                BigInteger k = DiffieHellman.CalculateKey(A, b, p);
+                Console.WriteLine("Server calculate k:" + k.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Клиент отключился при генерации общего секретного ключа");
+            }
 
             client.Close();
         }

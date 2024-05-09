@@ -81,5 +81,10 @@ namespace Diffie_Hellman_Protocol
         {
             richTextBox1.Text += text;
         }
+
+        private void Client_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Send(client.stream, Encoding.UTF8.GetBytes("ClientClosed"));
+        }
     }
 }
