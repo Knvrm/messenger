@@ -11,18 +11,23 @@ namespace Diffie_Hellman_Protocol
 {
     internal class PrimeNumberUtils
     {
-        public static BigInteger GenerateBigInteger(int bit) 
+        public static BigInteger GenerateBigInteger(int bit)
         {
-            int byteCount = (bit + 7) / 8;
+            int byteCount = (bit + 7) / 8; // Вычисляем количество байтов на основе битовой длины
 
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             byte[] bytes = new byte[byteCount];
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
 
-            rng.GetBytes(bytes);
+            do
+            {
+                rng.GetBytes(bytes); // Генерируем случайные байты
+                bytes[byteCount - 1] &= (byte)(0xFF >> (8 - (bit % 8))); // Обрезаем лишние биты
+            }
+            while (bytes[0] == 0); // Проверяем, что старший байт не равен нулю
 
-            BigInteger result = new BigInteger(bytes);
+            BigInteger result = new BigInteger(bytes); // Преобразуем байты в BigInteger
 
-            return BigInteger.Abs(result);
+            return BigInteger.Abs(result); // Возвращаем абсолютное значение числа
         }
 
         public static BigInteger GeneratePrimeNumber(int bit)
@@ -34,7 +39,7 @@ namespace Diffie_Hellman_Protocol
                 if (x % 2 == 0)
                     x++;
 
-                if (MillerRabinTest(x, 10))
+                if (MillerRabinTest(x, 80))
                     return x;
             }
         }
@@ -46,10 +51,11 @@ namespace Diffie_Hellman_Protocol
                 x >>= 1;
                 bitLength++;
             }
+    
 
             return bitLength;
         }
-        public static bool MillerRabinTest(BigInteger n, double k)
+        public static bool MillerRabinTest(BigInteger n, int k)
         {
             if (n <= 1)
                 return false;
@@ -57,7 +63,9 @@ namespace Diffie_Hellman_Protocol
                 return true;
             if (n % 2 == 0)
                 return false;
-            BigInteger s = 0, d = n - 1;
+
+            BigInteger d = n - 1;
+            int s = 0;
             while (d % 2 == 0)
             {
                 d /= 2;
@@ -66,22 +74,28 @@ namespace Diffie_Hellman_Protocol
 
             for (int i = 0; i < k; i++)
             {
-                int bit = GetBitLength(n);
-                BigInteger a = GenerateBigInteger(bit);
-                while (a < 2 || a > n - 1)
-                    a = GenerateBigInteger(bit);
+                BigInteger a = GenerateBigInteger(GetBitLength(n)); // Случайное число a
+                if (a < 2)
+                    a = 2;
+                if (a >= n)
+                    a = n - 1;
+
                 BigInteger x = BigInteger.ModPow(a, d, n);
                 if (x == 1 || x == n - 1)
                     continue;
+                bool probablePrime = false;
                 for (int j = 0; j < s - 1; j++)
                 {
                     x = BigInteger.ModPow(x, 2, n);
                     if (x == 1)
                         return false;
                     if (x == n - 1)
+                    {
+                        probablePrime = true;
                         break;
+                    }
                 }
-                if (x != n - 1)
+                if (!probablePrime)
                     return false;
             }
             return true;

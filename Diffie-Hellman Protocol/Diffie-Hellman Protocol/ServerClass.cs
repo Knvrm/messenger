@@ -24,7 +24,7 @@ namespace Diffie_Hellman_Protocol
         private TcpListener listener;
         public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
-        public int bit = 16;
+        public int bit = 128;
 
         public ServerClass(string ipAddress, int port)
         {
@@ -42,7 +42,6 @@ namespace Diffie_Hellman_Protocol
             if (connection.State == ConnectionState.Open)
             {
                 Console.WriteLine("Подключение к базе данных успешно установлено.");
-                // Ваш код работы с базой данных здесь
             }
             else
             {
@@ -104,26 +103,13 @@ namespace Diffie_Hellman_Protocol
         public bool Authenticate(NetworkStream stream)
         {
             string login = "", password = "";
-            while (true)
-            {
-                string message = ReceiveString(stream);
 
-                if (message.Length >= 5 && message.Substring(0, 5) == "LOGIN")
-                {
-                    login = message.Substring(6);
-                    
-                }
-                else if (message.Length >= 8 && message.Substring(0, 8).ToUpper() == "PASSWORD")
-                {
-                    password = message.Substring(9);  
-                }
-                if (login != "" && password != "") break;
-            }
-            if(!DBManager.SqlQueryCheckLoginAndPassword(login, password, connection))
+            login = ReceiveString(stream);
+            password = ReceiveString(stream);
+            if (!DBManager.SqlQueryCheckLoginAndPassword(login, password, connection))
                 return false;
             else
                 return true;
-            //Console.WriteLine(login + " " + password);
         }
         public bool GenerateKey(NetworkStream stream)
         {

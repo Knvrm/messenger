@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Numerics;
 using static Diffie_Hellman_Protocol.PrimeNumberUtils;
 
@@ -10,35 +11,29 @@ namespace Diffie_Hellman_Protocol
         public static BigInteger FindPrimitiveRoot(BigInteger p)
         {
             BigInteger q = 2 * p + 1;
-            BigInteger g = q;
-            int bit = GetBitLength(p);
+            BigInteger g = 2;
+            //int bit = GetBitLength(p);
             
             while(true)
             {
-                g = GenerateBigInteger(bit);
-                while (g > q - 1) 
-                    g = GenerateBigInteger(bit);
-
-                if (BigInteger.ModPow(g, 2, q) != 1)
-                {
-                    if (BigInteger.ModPow(g, p, q) != 1 && BigInteger.ModPow(g, 2 * p, q) == 1)
-                    {
-                        return g;
-                    }
-                }
+                if (BigInteger.ModPow(g, 2, q) != 1 && BigInteger.ModPow(g, p, q) != 1 && BigInteger.ModPow(g, 2 * p, q) == 1)
+                    return g;
+                g += 1;
             }
         }
 
         public static BigInteger[] GenerateFirstPublicParams(int bit)
         {
-            BigInteger[] paramsArray = new BigInteger[2];
+            BigInteger p;
             do
             {
-                paramsArray[0] = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
+                p = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
             }
-            while (!MillerRabinTest(2 * paramsArray[0] + 1, 10));
-            paramsArray[1] = FindPrimitiveRoot(paramsArray[0]);
-            return paramsArray;
+            while(!MillerRabinTest(2 * p + 1, Convert.ToInt32(BigInteger.Log(2 * p + 1))));
+            BigInteger q = 2 * p + 1;
+
+            BigInteger g = FindPrimitiveRoot(p);
+            return new BigInteger[] { q, g };
         }
         public static BigInteger GenerateSecondPublicParam(int bit)
         {

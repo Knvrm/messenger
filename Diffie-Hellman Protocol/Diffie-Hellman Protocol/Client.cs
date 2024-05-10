@@ -38,11 +38,11 @@ namespace Diffie_Hellman_Protocol
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
-                Send(client.stream, Encoding.UTF8.GetBytes("AUTH"));
+                Send(client.stream, "AUTH");
                 string login = richTextBox1.Text;
                 string password = richTextBox2.Text;
-                Send(client.stream, Encoding.UTF8.GetBytes("LOGIN " + login));
-                Send(client.stream, Encoding.UTF8.GetBytes("PASSWORD " + login));
+                Send(client.stream, login);
+                Send(client.stream, password);
                 while(true)
                 {
                     string msg = ReceiveString(client.stream);
@@ -51,7 +51,7 @@ namespace Diffie_Hellman_Protocol
                         Console.WriteLine("Успешная авторизация");
                         Messenger form = new Messenger();
                         form.Show();
-                        this.Close();
+                        this.Visible = false;
                         break;
                     }
                     else if (msg == "FAILURE_AUTH")

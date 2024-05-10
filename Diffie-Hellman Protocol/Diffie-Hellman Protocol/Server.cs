@@ -39,7 +39,11 @@ namespace Diffie_Hellman_Protocol
 
         private void Generate_Click(object sender, EventArgs e)
         {
-            /*int bit = 16;
+            int bit = 400;
+
+            BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
+            p = paramsArray[0];
+            g = paramsArray[1];
 
             do
                 a = DiffieHellman.GenerateSecondPublicParam(bit);
@@ -51,9 +55,9 @@ namespace Diffie_Hellman_Protocol
             InputP.Text = p.ToString();
             InputG.Text = g.ToString();
             InputA.Text = a.ToString();
-            InputB.Text = b.ToString();*/
-            string text = richTextBox1.Text;
-            NetworkStreamManager.Send(srv.clients[0], Encoding.UTF8.GetBytes(text));
+            InputB.Text = b.ToString();
+            //string text = richTextBox1.Text;
+            //NetworkStreamManager.Send(srv.clients[0], Encoding.UTF8.GetBytes(text));
         }
 
         private void Count_Click(object sender, EventArgs e)
