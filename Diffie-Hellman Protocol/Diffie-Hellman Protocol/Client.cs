@@ -1,4 +1,5 @@
 ﻿using MySqlX.XDevAPI;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -32,36 +33,34 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(richTextBox1.Text == "")
+            if (richTextBox1.Text != "")
                 MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (richTextBox2.Text == "")
+            else if (richTextBox2.Text != "")
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
                 Send(client.stream, "AUTH");
                 string login = richTextBox1.Text;
                 string password = richTextBox2.Text;
+                login = "roma2003";
+                password = "roma2003";
                 Send(client.stream, login);
                 Send(client.stream, password);
-                while(true)
+                int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
+                Console.WriteLine(idUser);
+                if (idUser != -1)
                 {
-                    string msg = ReceiveString(client.stream);
-                    if (msg == "SUCCESFUL_AUTH")
-                    {
-                        Console.WriteLine("Успешная авторизация");
-                        Messenger form = new Messenger();
-                        form.Show();
-                        this.Visible = false;
-                        break;
-                    }
-                    else if (msg == "FAILURE_AUTH")
-                    {
-                        MessageBox.Show("Неправильно введен логин или пароль",
-                            "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        break;
-                    }
-                        
+                    Console.WriteLine("Успешная авторизация");
+                    Messenger form = new Messenger(idUser, client.stream);
+                    form.Show();
+                    this.Visible = false;
                 }
+                else
+                {
+                    MessageBox.Show("Неправильно введен логин или пароль",
+                        "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+
             }
            
         }
@@ -108,6 +107,7 @@ namespace Diffie_Hellman_Protocol
                         break;
                     }
                 }
+                
             });
         }
 

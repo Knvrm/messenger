@@ -62,6 +62,7 @@ namespace Diffie_Hellman_Protocol
         {
             var stream = client.GetStream();
             clients.Add(stream);
+            int idUser = 0;
 
             while (true)
             {
@@ -76,10 +77,8 @@ namespace Diffie_Hellman_Protocol
                         break;
                     case "AUTH":
                         // Вызов функции авторизации
-                        if (Authenticate(stream))
-                            Send(stream, "SUCCESFUL_AUTH");
-                        else
-                            Send(stream, "FAILURE_AUTH");
+                        idUser = Authenticate(stream);
+                        Send(stream, idUser);
                         break;
                     case "CLIENT_CLOSED":
                         Console.WriteLine("Клиент отключился");
@@ -87,7 +86,17 @@ namespace Diffie_Hellman_Protocol
                         client.Close();
                         return;
                     case "REGISTRATION":
-                        //
+                        
+                        break;
+                    case "GET_CHATS":
+                        if (idUser != 0)
+                        {
+                            string chats = DBManager.GetChatsByUserId(idUser, connection);
+                            Send(stream, chats);
+                            string chatNames = DBManager.GetChatNamesByIds(chats, connection);
+                            Send(stream, chatNames);
+                        }
+                            
                         break;
                     default:
                         Console.WriteLine("Получено сообщение от клиента " + text);
@@ -100,16 +109,16 @@ namespace Diffie_Hellman_Protocol
             }
             //client.Close();
         }
-        public bool Authenticate(NetworkStream stream)
+        public int Authenticate(NetworkStream stream)
         {
             string login = "", password = "";
 
             login = ReceiveString(stream);
             password = ReceiveString(stream);
-            if (!DBManager.SqlQueryCheckLoginAndPassword(login, password, connection))
-                return false;
+            if (DBManager.IsLoginAndPassword(login, password, connection))
+                return DBManager.GetUserId(login, connection);
             else
-                return true;
+                return -1;
         }
         public bool GenerateKey(NetworkStream stream)
         {

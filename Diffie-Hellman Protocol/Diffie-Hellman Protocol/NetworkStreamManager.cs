@@ -28,6 +28,11 @@ namespace Diffie_Hellman_Protocol
             byte[] data = Encoding.UTF8.GetBytes(text);
             Send(stream, data);
         }
+        public static void Send(NetworkStream stream, int x)
+        {
+            byte[] data = BitConverter.GetBytes(x);
+            Send(stream, data);
+        }
 
         public static byte[] Receive(NetworkStream stream)
         {
