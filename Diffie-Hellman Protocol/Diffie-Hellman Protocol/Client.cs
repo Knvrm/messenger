@@ -134,12 +134,13 @@ namespace Diffie_Hellman_Protocol
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            Send(client.stream, "REGISTRATION");
-            Send(client.stream, richTextBox1.Text);
-            Send(client.stream, richTextBox2.Text);
-            this.Visible = false;
+            //Send(client.stream, "REGISTRATION");
+            /*Send(client.stream, richTextBox1.Text);
+            Send(client.stream, richTextBox2.Text);*/
+            
             Registration reg = new Registration(client.stream);
             reg.Show();
+            Visible = false;
         }
     }
 }

@@ -26,7 +26,7 @@ namespace Diffie_Hellman_Protocol
 
             // После закрытия mainForm выполним выход из приложения
             Application.ApplicationExit += (sender, e) =>
-            {    
+            {
             };
         }
     }

@@ -28,7 +28,7 @@ namespace Diffie_Hellman_Protocol
 
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
             if (richTextBox1.Text == "" || richTextBox2.Text == "" || richTextBox3.Text == "")
                 MessageBox.Show("Не все поля заполнены", "Ошибка регистрации", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -39,7 +39,24 @@ namespace Diffie_Hellman_Protocol
                 Send(stream, "REGISTRATION");
                 Send(stream, richTextBox1.Text);
                 Send(stream, richTextBox2.Text);
+                string text = ReceiveString(stream);
+                if(text == "SUCCESFUL_REGISTRATION")
+                    MessageBox.Show("Вы успешно зарегистрировались", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                else
+                    MessageBox.Show("Что-то пошло не так", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (Form form in Application.OpenForms)
+            {
+                if (!form.Visible)
+                {
+                    form.Visible = true;
+                }
+            }
+            Close();
         }
     }
 }

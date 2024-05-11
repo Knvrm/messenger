@@ -89,7 +89,10 @@ namespace Diffie_Hellman_Protocol
                     case "REGISTRATION":
                         string login = ReceiveString(stream);
                         string password = ReceiveString(stream);
-                        DBManager.AddUser(login, password, connection);
+                        if (DBManager.AddUser(login, password, connection) == true)
+                            Send(stream, "SUCCESFUL_REGISTRATION");
+                        else
+                            Send(stream, "FAILURE_REGISTRATION");
                         break;
                     case "GET_CHATS":
                         if (idUser != 0)
@@ -98,8 +101,20 @@ namespace Diffie_Hellman_Protocol
                             Send(stream, chats);
                             string chatNames = DBManager.GetChatNamesByIds(chats, connection);
                             Send(stream, chatNames);
+                        }  
+                        break;
+                    case "GET_CHAT_MESSAGES":
+                        byte[] data = Receive(stream);
+                        int ChatId = BitConverter.ToInt32(data, 0);
+                        List<Tuple<string, string>> messages = DBManager.GetMessagesWithSenders(ChatId, connection);
+                        Send(stream, messages.Count);
+                        foreach (var message in messages)
+                        {
+                            //Console.WriteLine($"{message.Item1}: {message.Item2}");
+                            Send(stream, message.Item1);
+                            Send(stream, message.Item2);
                         }
-                            
+
                         break;
                     default:
                         Console.WriteLine("Получено сообщение от клиента " + text);

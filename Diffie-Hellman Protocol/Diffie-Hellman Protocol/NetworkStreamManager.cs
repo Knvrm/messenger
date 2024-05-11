@@ -50,5 +50,6 @@ namespace Diffie_Hellman_Protocol
             byte[] dataBytes = Receive(stream);
             return Encoding.UTF8.GetString(dataBytes);
         }
+
     }
 }

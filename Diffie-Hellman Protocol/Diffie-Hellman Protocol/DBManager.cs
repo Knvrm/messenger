@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -141,22 +142,18 @@ namespace Diffie_Hellman_Protocol
         }
         public static bool AddUser(string login, string password, MySqlConnection connection)
         {
-            string sql = $"INSERT INTO mydb.users (nickname, login, password) values (\"{login}\", {login}, {password})";
+            string sql = "INSERT INTO mydb.users (nickname, login, password) VALUES (@Nickname, @Login, @Password)";
             MySqlCommand command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@Nickname", login);  // Используем логин в качестве никнейма
+            command.Parameters.AddWithValue("@Login", login);
+            command.Parameters.AddWithValue("@Password", password);
 
-            MySqlDataReader reader = command.ExecuteReader();
+            int rowsAffected = command.ExecuteNonQuery();
 
-            if (reader.HasRows)
-            {
-                reader.Close();
-                return true;
-            }
-            else
-            {
-                reader.Close();
-                return false;
-            }
+            return rowsAffected > 0;
         }
+
+
         public static bool AddMessage(string chatID, string userID, string text, MySqlConnection connection)
         {
             string sql = $"INSERT INTO mydb.messages (content, ChatParticipants_Chats_idChat, ChatParticipants_Users_idUser) values (\"{text}\", {chatID}, {chatID})";
@@ -175,10 +172,37 @@ namespace Diffie_Hellman_Protocol
                 return false;
             }
         }
+        public static List<Tuple<string, string>> GetMessagesWithSenders(int curChatId, MySqlConnection connection)
+        {
+            List<Tuple<string, string>> messages = new List<Tuple<string, string>>();
+
+            string sql = @"SELECT m.content, u.nickname
+                   FROM mydb.messages m 
+                   JOIN mydb.users u ON m.ChatParticipants_Users_idUser = u.idUser
+                   WHERE m.ChatParticipants_Chats_idChat = @ChatId";
+
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@ChatId", curChatId);
+
+                using (MySqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        string content = reader.GetString("content");
+                        string senderNickname = reader.GetString("nickname");
+
+                        messages.Add(Tuple.Create(senderNickname, content));
+                    }
+                }
+            }
+
+            return messages;
+        }
+
 
         public static bool IsUserName(string UserName, MySqlConnection connection)
         {
-
             string sql = $"SELECT nickname FROM mydb.users WHERE name = \"{UserName}\"";
             MySqlCommand command = new MySqlCommand(sql, connection);
 
