@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
 
 namespace Diffie_Hellman_Protocol
@@ -47,7 +48,7 @@ namespace Diffie_Hellman_Protocol
                 Send(client.stream, login);
                 Send(client.stream, password);
                 int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
-                Console.WriteLine(idUser);
+                //Console.WriteLine(idUser);
                 if (idUser != -1)
                 {
                     Console.WriteLine("Успешная авторизация");
@@ -134,6 +135,11 @@ namespace Diffie_Hellman_Protocol
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Send(client.stream, "REGISTRATION");
+            Send(client.stream, richTextBox1.Text);
+            Send(client.stream, richTextBox2.Text);
+            this.Visible = false;
+            Registration reg = new Registration(client.stream);
+            reg.Show();
         }
     }
 }

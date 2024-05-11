@@ -16,8 +16,8 @@ namespace Diffie_Hellman_Protocol
     {
         int userId;
         NetworkStream stream;
-        string chatIds;
-        List<string> chatNames;
+        Dictionary<int, string> chats = new Dictionary<int, string>();
+        int curChatId;
         public Messenger(int userId, NetworkStream stream)
         {
             InitializeComponent();
@@ -28,12 +28,12 @@ namespace Diffie_Hellman_Protocol
         private void Messenger_Load(object sender, EventArgs e)
         {
             Send(stream, "GET_CHATS");
-            chatIds = ReceiveString(stream);
-            string text = ReceiveString(stream);
-            chatNames = new List<string>(text.Split(' '));
+            List<string> chatIds = new List<string>(ReceiveString(stream).Split(' '));
+            List<string> chatNames = new List<string>(ReceiveString(stream).Split(' '));
             listView1.Items.Clear();
-            
-            listView1.Columns.Add("Ваши чаты", 130);
+            for(int i = 0; i < chatIds.Count; i++)
+                chats.Add(Convert.ToInt32(chatIds[i]), chatNames[i]);
+            listView1.Columns.Add("Ваши чаты", listView1.Width - 5);
             listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
 
 
@@ -41,8 +41,20 @@ namespace Diffie_Hellman_Protocol
             foreach (string chatName in chatNames)
             {
                 listView1.Items.Add(chatName);
+                
             }
-            //Console.WriteLine(text);
+
+            //Console.WriteLine(chats);
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listView1_ItemActivate(object sender, EventArgs e)
+        {
+            //curChatId = Item
         }
     }
 }

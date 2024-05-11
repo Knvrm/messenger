@@ -139,9 +139,24 @@ namespace Diffie_Hellman_Protocol
 
             return string.Join(" ", chatNames);
         }
+        public static bool AddUser(string login, string password, MySqlConnection connection)
+        {
+            string sql = $"INSERT INTO mydb.users (nickname, login, password) values (\"{login}\", {login}, {password})";
+            MySqlCommand command = new MySqlCommand(sql, connection);
 
+            MySqlDataReader reader = command.ExecuteReader();
 
-
+            if (reader.HasRows)
+            {
+                reader.Close();
+                return true;
+            }
+            else
+            {
+                reader.Close();
+                return false;
+            }
+        }
         public static bool AddMessage(string chatID, string userID, string text, MySqlConnection connection)
         {
             string sql = $"INSERT INTO mydb.messages (content, ChatParticipants_Chats_idChat, ChatParticipants_Users_idUser) values (\"{text}\", {chatID}, {chatID})";

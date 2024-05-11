@@ -15,7 +15,8 @@ using static Diffie_Hellman_Protocol.NetworkStreamManager;
 using System.Windows.Forms;
 using System.Data;
 using static Diffie_Hellman_Protocol.Server;
-using Diffie_Hellman_Protocol;
+using System.Diagnostics.Eventing.Reader;
+
 
 namespace Diffie_Hellman_Protocol
 {
@@ -86,7 +87,9 @@ namespace Diffie_Hellman_Protocol
                         client.Close();
                         return;
                     case "REGISTRATION":
-                        
+                        string login = ReceiveString(stream);
+                        string password = ReceiveString(stream);
+                        DBManager.AddUser(login, password, connection);
                         break;
                     case "GET_CHATS":
                         if (idUser != 0)
@@ -126,28 +129,28 @@ namespace Diffie_Hellman_Protocol
             BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
             BigInteger p = paramsArray[0], g = paramsArray[1];
 
-            Console.WriteLine("Server P: " + p.ToString());
-            Console.WriteLine("Server G: " + g.ToString());
-
             Send(stream, p);
             Send(stream, g);
 
             data = Receive(stream);
             BigInteger A = new BigInteger(data);
-            Console.WriteLine("Server received A:" + A.ToString());
-
             BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
             BigInteger B = DiffieHellman.CalculateKey(g, b, p);
-            Console.WriteLine("Server b:" + b.ToString());
-            Console.WriteLine("Server gen B:" + B.ToString());
-            Send(stream, B);
 
+            Send(stream, B);
             BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-            Console.WriteLine("Server calculate k:" + k.ToString());
             if (k != 0) 
                 return true;
             else
                 return false;
+            /*Console.WriteLine("Server P: " + p.ToString());
+            Console.WriteLine("Server G: " + g.ToString());
+            Console.WriteLine("Server received A:" + A.ToString());
+            Console.WriteLine("Server b:" + b.ToString());
+            Console.WriteLine("Server gen B:" + B.ToString());
+            Console.WriteLine("Server calculate k:" + k.ToString());*/
+
+
         }
     }
 }

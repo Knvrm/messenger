@@ -19,10 +19,10 @@ namespace Diffie_Hellman_Protocol
             Server mainForm = new Server();
             Client secondForm = new Client();
 
-            mainForm.Show();
+            //mainForm.Show();
             secondForm.Show();
 
-            Application.Run(mainForm); // Используем mainForm в качестве основной формы
+            Application.Run(secondForm); // Используем mainForm в качестве основной формы
 
             // После закрытия mainForm выполним выход из приложения
             Application.ApplicationExit += (sender, e) =>
