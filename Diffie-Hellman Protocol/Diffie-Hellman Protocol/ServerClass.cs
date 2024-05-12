@@ -88,11 +88,17 @@ namespace Diffie_Hellman_Protocol
                         return;
                     case "REGISTRATION":
                         string login = ReceiveString(stream);
-                        string password = ReceiveString(stream);
-                        if (DBManager.AddUser(login, password, connection) == true)
-                            Send(stream, "SUCCESFUL_REGISTRATION");
+                        if (DBManager.IsUserNameExist(login, connection))
+                            Send(stream, "USER_EXIST");
                         else
-                            Send(stream, "FAILURE_REGISTRATION");
+                        {
+                            Send(stream, "USER_NOT_EXIST");
+                            string password = ReceiveString(stream);
+                            if (DBManager.AddUser(login, password, connection) == true)
+                                Send(stream, "SUCCESFUL_REGISTRATION");
+                            else
+                                Send(stream, "FAILURE_REGISTRATION");
+                        }
                         break;
                     case "GET_CHATS":
                         if (idUser != 0)
@@ -114,7 +120,19 @@ namespace Diffie_Hellman_Protocol
                             Send(stream, message.Item1);
                             Send(stream, message.Item2);
                         }
+                        break;
+                    case "SEND_MESSAGE":
+                        string msg = ReceiveString(stream);
+                        string[] parts = msg.Split(' ');
 
+                        // Получаем айди чата, айди пользователя и текст сообщения
+                        string chatId = parts[0];
+                        string userId = parts[1];
+                        string content = string.Join(" ", parts.Skip(2));
+                        if (DBManager.AddMessage(chatId, userId, content, connection))
+                            Send(stream, "SUCCESFUL_SEND");
+                        else
+                            Send(stream, "FAILURE_SEND");
                         break;
                     default:
                         Console.WriteLine("Получено сообщение от клиента " + text);

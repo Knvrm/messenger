@@ -34,15 +34,15 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (richTextBox1.Text != "")
+            if (textBox1.Text != "")
                 MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (richTextBox2.Text != "")
+            else if (textBox2.Text != "")
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
                 Send(client.stream, "AUTH");
-                string login = richTextBox1.Text;
-                string password = richTextBox2.Text;
+                string login = textBox1.Text;
+                string password = textBox2.Text;
                 login = "roma2003";
                 password = "roma2003";
                 Send(client.stream, login);
@@ -112,18 +112,18 @@ namespace Diffie_Hellman_Protocol
             });
         }
 
-        private void UpdateRichTextBox(string text)
+        private void UpdateTextBox(string text)
         {
-            if (richTextBox1.InvokeRequired)
+            if (textBox1.InvokeRequired)
             {
-                richTextBox1.Invoke(new Action(() =>
+                textBox1.Invoke(new Action(() =>
                 {
-                    UpdateRichTextBox(text);
+                    UpdateTextBox(text);
                 }));
             }
             else
             {
-                richTextBox1.AppendText(text + Environment.NewLine);
+                textBox1.AppendText(text + Environment.NewLine);
             }
         }
 
@@ -133,11 +133,7 @@ namespace Diffie_Hellman_Protocol
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            //Send(client.stream, "REGISTRATION");
-            /*Send(client.stream, richTextBox1.Text);
-            Send(client.stream, richTextBox2.Text);*/
-            
+        {            
             Registration reg = new Registration(client.stream);
             reg.Show();
             Visible = false;

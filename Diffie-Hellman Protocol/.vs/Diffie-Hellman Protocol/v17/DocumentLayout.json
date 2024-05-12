@@ -3,12 +3,36 @@
   "WorkspaceRootPath": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|c:\\users\\roman\\desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\diffie-hellman protocol\\diffie-hellman protocol\\registration.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\registration.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\messenger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\messenger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|c:\\users\\roman\\desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\diffie-hellman protocol\\diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\dbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\dbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\networkstreammanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\networkstreammanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\messenger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,40 +43,20 @@
       "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\serverclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\dbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\dbmanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\networkstreammanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\networkstreammanager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\messenger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\messenger.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\server.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|c:\\users\\roman\\desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\diffie-hellman protocol\\diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\registration.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\client.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\primenumberutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\primenumberutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|solutionrelative:diffie-hellman protocol\\clientclass.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{EC6A3D37-48C5-44C7-B49D-0C112088D664}|Diffie-Hellman Protocol\\Diffie-Hellman Protocol.csproj|C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\diffie-hellman protocol\\diffiehellman.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -66,17 +70,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "Client.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Client.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Client.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Client.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\Client.cs",
-              "ViewState": "AQIAAFgAAAAAAAAAAAAiwG4AAAAQAAAA",
+              "ViewState": "AQIAACwAAAAAAAAAAAAcwCQAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-29T22:07:46.885Z",
               "IsPinned": true,
@@ -84,20 +88,21 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 6,
               "Title": "ClientClass.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\ClientClass.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\ClientClass.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\ClientClass.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\ClientClass.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAYAAAA",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAAwA0AAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-29T22:57:00.668Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 5,
               "Title": "Client.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Client.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Client.cs",
@@ -110,13 +115,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 11,
               "Title": "Server.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Server.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Server.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Server.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\Server.cs",
-              "ViewState": "AQIAAD8AAAAAAAAAAAAWwCkAAAAYAAAA",
+              "ViewState": "AQIAACAAAAAAAAAAAAD4vykAAAAYAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-10T12:17:39.373Z",
               "IsPinned": true,
@@ -124,13 +129,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 9,
               "Title": "ServerClass.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\ServerClass.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\ServerClass.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\ServerClass.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\ServerClass.cs",
-              "ViewState": "AQIAAF8AAAAAAAAAAAAWwGkAAAAtAAAA",
+              "ViewState": "AQIAACIAAAAAAAAAAIAywFoAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-10T21:17:39.177Z",
               "IsPinned": true,
@@ -138,7 +143,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 12,
               "Title": "Server.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Server.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Server.cs",
@@ -151,13 +156,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 7,
               "Title": "NetworkStreamManager.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\NetworkStreamManager.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\NetworkStreamManager.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\NetworkStreamManager.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\NetworkStreamManager.cs",
-              "ViewState": "AQIAAB0AAAAAAAAAAAAAACsAAAAMAAAA",
+              "ViewState": "AQIAAB8AAAAAAAAAAAAMwCsAAAAMAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-09T22:37:40.793Z",
               "IsPinned": true,
@@ -165,7 +170,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "DiffieHellman.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\DiffieHellman.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\DiffieHellman.cs",
@@ -178,7 +183,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "PrimeNumberUtils.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\PrimeNumberUtils.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\PrimeNumberUtils.cs",
@@ -191,13 +196,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 10,
               "Title": "DBManager.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\DBManager.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\DBManager.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\DBManager.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\DBManager.cs",
-              "ViewState": "AQIAALEAAAAAAAAAAAAcwMkAAAAAAAAA",
+              "ViewState": "AQIAAMMAAAAAAAAAAAAgwM4AAAAtAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-11T07:55:30.655Z",
               "IsPinned": true,
@@ -205,13 +210,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 8,
               "Title": "Messenger.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Messenger.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Messenger.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Messenger.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\Messenger.cs",
-              "ViewState": "AQIAAD0AAAAAAAAAAAAkwEoAAAA3AAAA",
+              "ViewState": "AQIAAEMAAAAAAAAAAAAAAFEAAAAlAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-09T23:39:16.219Z",
               "IsPinned": true,
@@ -219,7 +224,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "Messenger.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Messenger.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Messenger.cs",
@@ -232,13 +237,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 0,
               "Title": "Registration.cs",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Registration.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Registration.cs",
               "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Registration.cs",
               "RelativeToolTip": "Diffie-Hellman Protocol\\Registration.cs",
-              "ViewState": "AQIAACoAAAAAAAAAAAAIwDYAAAARAAAA",
+              "ViewState": "AQIAAEAAAAAAAAAAAADwv0oAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-11T08:21:35.176Z",
               "IsPinned": true,
@@ -246,7 +251,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 1,
               "Title": "Registration.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Registration.cs",
               "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Registration.cs",
@@ -256,6 +261,19 @@
               "WhenOpened": "2024-05-11T08:21:20.172Z",
               "IsPinned": true,
               "EditorCaption": " [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Registration.Designer.cs",
+              "DocumentMoniker": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Registration.Designer.cs",
+              "RelativeDocumentMoniker": "Diffie-Hellman Protocol\\Registration.Designer.cs",
+              "ToolTip": "C:\\Users\\Roman\\Desktop\\#1\\\u043A\u0443\u0440\u0441\u043E\u0432\u0430\u044F\\Diffie-Hellman Protocol\\Diffie-Hellman Protocol\\Registration.Designer.cs",
+              "RelativeToolTip": "Diffie-Hellman Protocol\\Registration.Designer.cs",
+              "ViewState": "AQIAAA4AAAAAAAAAAAAIwIYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-12T14:41:24.062Z",
+              "EditorCaption": ""
             }
           ]
         }

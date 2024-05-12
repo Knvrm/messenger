@@ -156,21 +156,17 @@ namespace Diffie_Hellman_Protocol
 
         public static bool AddMessage(string chatID, string userID, string text, MySqlConnection connection)
         {
-            string sql = $"INSERT INTO mydb.messages (content, ChatParticipants_Chats_idChat, ChatParticipants_Users_idUser) values (\"{text}\", {chatID}, {chatID})";
+            string sql = "INSERT INTO mydb.messages (content, ChatParticipants_Chats_idChat, ChatParticipants_Users_idUser) " +
+                         "VALUES (@Content, @ChatID, @UserID)";
+
             MySqlCommand command = new MySqlCommand(sql, connection);
+            command.Parameters.AddWithValue("@Content", text);
+            command.Parameters.AddWithValue("@ChatID", chatID);
+            command.Parameters.AddWithValue("@UserID", userID);
 
-            MySqlDataReader reader = command.ExecuteReader();
+            int rowsAffected = command.ExecuteNonQuery();
 
-            if (reader.HasRows)
-            {
-                reader.Close();
-                return true;
-            }
-            else
-            {
-                reader.Close();
-                return false;
-            }
+            return rowsAffected > 0;
         }
         public static List<Tuple<string, string>> GetMessagesWithSenders(int curChatId, MySqlConnection connection)
         {
@@ -179,7 +175,7 @@ namespace Diffie_Hellman_Protocol
             string sql = @"SELECT m.content, u.nickname
                    FROM mydb.messages m 
                    JOIN mydb.users u ON m.ChatParticipants_Users_idUser = u.idUser
-                   WHERE m.ChatParticipants_Chats_idChat = @ChatId";
+                   WHERE m.ChatParticipants_Chats_idChat = @ChatId ORDER BY id";
 
             using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
@@ -201,22 +197,15 @@ namespace Diffie_Hellman_Protocol
         }
 
 
-        public static bool IsUserName(string UserName, MySqlConnection connection)
+        public static bool IsUserNameExist(string UserName, MySqlConnection connection)
         {
-            string sql = $"SELECT nickname FROM mydb.users WHERE name = \"{UserName}\"";
-            MySqlCommand command = new MySqlCommand(sql, connection);
+            string sql = "SELECT COUNT(*) FROM mydb.users WHERE login = @UserName";
 
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (reader.HasRows)
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
             {
-                reader.Close();
-                return true;
-            }
-            else
-            {
-                reader.Close();
-                return false;
+                command.Parameters.AddWithValue("@UserName", UserName);
+                int count = Convert.ToInt32(command.ExecuteScalar());
+                return count > 0;
             }
         }
     }

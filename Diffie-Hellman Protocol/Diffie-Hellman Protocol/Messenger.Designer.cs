@@ -86,6 +86,7 @@
             this.Controls.Add(this.listView1);
             this.Name = "Messenger";
             this.Text = "Messenger";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Messenger_FormClosing);
             this.Load += new System.EventHandler(this.Messenger_Load);
             this.ResumeLayout(false);
 

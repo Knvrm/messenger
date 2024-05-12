@@ -49,7 +49,21 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
+            if(richTextBox1.Text != "")
+            {
+                Send(stream, "SEND_MESSAGE");
+                string message = $"{curChatId.ToString()} {userId.ToString()} {richTextBox1.Text}";
+                Send(stream, message);
+                if (ReceiveString(stream) == "SUCCESFUL_SEND")
+                {
+                    Console.WriteLine("Сообщение отправлено");
+                    UpdateChatMessages(curChatId);
 
+                }
+                else
+                    Console.WriteLine("Сообщение не отправлено");
+
+            }
         }
 
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
@@ -63,21 +77,47 @@ namespace Diffie_Hellman_Protocol
                 string itemText = selectedItem.Text;
 
                 curChatId = chats[itemText];
-                
-                Send(stream, "GET_CHAT_MESSAGES");
-                Send(stream, curChatId);
-                byte[] data = Receive(stream);
-                int NumberOfMessages = BitConverter.ToInt32(data, 0);
-                richTextBox2.Clear();
-                for(int i = 0; i < NumberOfMessages; i++)
-                {
-                    string senderName = ReceiveString(stream);
-                    richTextBox2.Text += senderName + '\n';
-                    string message = ReceiveString(stream);
-                    richTextBox2.Text += message + '\n';
-                }
+                UpdateChatMessages(curChatId);
                 //Console.WriteLine(curChatId);
+                richTextBox1.Clear();
             }
+        }
+
+        public void UpdateChatMessages(int chatId)
+        {
+            Send(stream, "GET_CHAT_MESSAGES");
+            Send(stream, curChatId);
+            byte[] data = Receive(stream);
+            int NumberOfMessages = BitConverter.ToInt32(data, 0);
+            richTextBox2.Clear();
+            for (int i = 0; i < NumberOfMessages; i++)
+            {
+                string senderName = ReceiveString(stream);
+                richTextBox2.Text += senderName + '\n';
+                string message = ReceiveString(stream);
+                richTextBox2.Text += message + '\n';
+            }
+        }
+
+        private void Messenger_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            List<Form> formsToClose = new List<Form>();
+
+            // Добавляем скрытые формы во временную коллекцию
+            foreach (Form form in Application.OpenForms)
+            {
+                if (!form.Visible)
+                {
+                    formsToClose.Add(form);
+                }
+            }
+
+            // Закрываем формы из временной коллекции
+            foreach (Form form in formsToClose)
+            {
+                form.Close();
+            }
+
         }
     }
 }
