@@ -13,10 +13,17 @@ namespace Diffie_Hellman_Protocol
     {
         public static void Send(NetworkStream stream, byte[] data)
         {
-            byte[] lengthBytes = BitConverter.GetBytes(data.Length);
-            stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
+            try
+            {
+                byte[] lengthBytes = BitConverter.GetBytes(data.Length);
+                stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
 
-            stream.WriteAsync(data, 0, data.Length).Wait();
+                stream.WriteAsync(data, 0, data.Length).Wait();
+            }
+            catch
+            {
+                Console.WriteLine("Ошибка отправки");
+            }
         }
         public static void Send(NetworkStream stream, BigInteger x)
         {

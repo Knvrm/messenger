@@ -24,7 +24,7 @@ namespace Diffie_Hellman_Protocol
         ClientClass client;
         const string serverIP = "127.0.0.1"; // IP адрес сервера
         const int serverPort = 8081; // Порт сервера
-
+        bool IsKeyGen = false;
         public Client()
         {
             InitializeComponent();
@@ -34,6 +34,10 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
+            while (!IsKeyGen)
+            {
+                continue;
+            }
             if (textBox1.Text != "")
                 MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (textBox2.Text != "")
@@ -54,6 +58,8 @@ namespace Diffie_Hellman_Protocol
                     Console.WriteLine("Успешная авторизация");
                     Messenger form = new Messenger(idUser, client.stream);
                     form.Show();
+                    textBox1.Clear();
+                    textBox2.Clear();
                     this.Visible = false;
                 }
                 else
@@ -61,10 +67,9 @@ namespace Diffie_Hellman_Protocol
                     MessageBox.Show("Неправильно введен логин или пароль",
                         "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-
             }
-           
         }
+
 
         private async void Client_Load(object sender, EventArgs e)
         {
@@ -99,6 +104,7 @@ namespace Diffie_Hellman_Protocol
                     if (msg == "SUCCESFUL_GEN")
                     {
                         Console.WriteLine("Успешная генерация ключа");
+                        IsKeyGen = true;
                         break;
                     }
                     else if (msg == "FAILURE_GEN")
@@ -108,7 +114,6 @@ namespace Diffie_Hellman_Protocol
                         break;
                     }
                 }
-                
             });
         }
 

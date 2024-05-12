@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySqlX.XDevAPI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -6,6 +7,7 @@ using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
@@ -111,13 +113,28 @@ namespace Diffie_Hellman_Protocol
                     formsToClose.Add(form);
                 }
             }
-
+            //Send(stream, "CLIENT_CLOSED");
             // Закрываем формы из временной коллекции
             foreach (Form form in formsToClose)
             {
                 form.Close();
             }
+            
+        }
 
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+            // Добавляем скрытые формы во временную коллекцию
+            foreach (Form form in Application.OpenForms)
+            {
+                if (!form.Visible)
+                {
+                    form.Visible = true;
+                }
+            }
+            this.Close();
+            
         }
     }
 }
