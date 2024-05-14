@@ -14,10 +14,12 @@ namespace Diffie_Hellman_Protocol
         public static BigInteger GenerateBigInteger(int bit)
         {
             string a = "1";
-            Random rnd = new Random();
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             for (int i = 1; i < bit; i++)
             {
-                a += Convert.ToString(rnd.Next(0, 2));
+                byte[] randomByte = new byte[1];
+                rng.GetBytes(randomByte);
+                a += Convert.ToString(randomByte[0] & 1);
             }
 
             char[] a_reverse = a.ToCharArray();
@@ -35,10 +37,12 @@ namespace Diffie_Hellman_Protocol
         public static BigInteger GenerateBigInteger2(int bit)
         {
             string a = "";
-            Random rnd = new Random();
+            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
             for (int i = 1; i <= bit; i++)
             {
-                a += Convert.ToString(rnd.Next(0, 2));
+                byte[] randomByte = new byte[1];
+                rng.GetBytes(randomByte);
+                a += Convert.ToString(randomByte[0] & 1);
             }
 
             char[] a_reverse = a.ToCharArray();

@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
+using static Mysqlx.Expect.Open.Types.Condition.Types;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -77,28 +78,40 @@ namespace Diffie_Hellman_Protocol
             await Task.Run(() =>
             {
                 Send(client.stream, "GEN_KEY");
-                byte[] data;
-                data = Receive(client.stream);
-                BigInteger p = new BigInteger(data);
+                BigInteger k;
+                int BitLength;
+                do
+                {
+                    byte[] data;
+                    data = Receive(client.stream);
+                    BigInteger p = new BigInteger(data);
 
-                data = Receive(client.stream);
-                BigInteger g = new BigInteger(data);
+                    data = Receive(client.stream);
+                    BigInteger g = new BigInteger(data);
+                    BitLength = PrimeNumberUtils.GetBitLength(p);
 
-                Console.WriteLine("Client P: " + p.ToString());
-                Console.WriteLine("Client G: " + g.ToString());
+                    Console.WriteLine("Client P: " + p.ToString());
+                    Console.WriteLine("Client G: " + g.ToString());
+                    BigInteger a, A;
+                    do
+                    {
+                        a = DiffieHellman.GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
+                        A = DiffieHellman.CalculateKey(g, a, p);
+                    }
+                    while (a >= p || PrimeNumberUtils.GetBitLength(A) != BitLength);
 
-                BigInteger a = DiffieHellman.GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
-                BigInteger A = DiffieHellman.CalculateKey(g, a, p);
-                Console.WriteLine("Client a:" + a.ToString());
-                Console.WriteLine("Client gen A:" + A.ToString());
-                Send(client.stream, A);
+                    Console.WriteLine("Client a:" + a.ToString());
+                    Console.WriteLine("Client gen A:" + A.ToString());
+                    Send(client.stream, A);
+
+                    data = Receive(client.stream);
+                    BigInteger B = new BigInteger(data);
+                    Console.WriteLine("Client receiver B:" + B.ToString());
+
+                    k = DiffieHellman.CalculateKey(B, a, p);
+                    Console.WriteLine("Client calculate k:" + k.ToString());
+                } while (PrimeNumberUtils.GetBitLength(k) != BitLength);
                 
-                data = Receive(client.stream);
-                BigInteger B = new BigInteger(data);
-                Console.WriteLine("Client receiver B:" + B.ToString());
-
-                BigInteger k = DiffieHellman.CalculateKey(B, a, p);
-                Console.WriteLine("Client calculate k:" + k.ToString());
                 while (true)
                 {
                     string msg = ReceiveString(client.stream);

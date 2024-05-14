@@ -10,19 +10,6 @@ namespace Diffie_Hellman_Protocol
 {
     internal class DBManager
     {
-        public static void SelectAll(MySqlConnection connection)
-        {
-            string sql = "SELECT * FROM messages";
-            MySqlCommand command = new MySqlCommand(sql, connection);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Console.WriteLine($"content: {reader["content"]}");
-            }
-        }
-
         public static bool IsChatName(string ChatName, MySqlConnection connection)
         {
 
@@ -195,7 +182,6 @@ namespace Diffie_Hellman_Protocol
 
             return messages;
         }
-
 
         public static bool IsUserNameExist(string UserName, MySqlConnection connection)
         {

@@ -10,13 +10,16 @@ namespace Diffie_Hellman_Protocol
 {
     internal class AES
     {
-        private readonly byte[] key; // Ключ для шифрования
-        private readonly int keySize; // Размер ключа в битах
+        Aes myAes;
 
         public AES(byte[] key, int keySize)
         {
-            this.key = key;
-            this.keySize = keySize;
+            byte[] truncatedKey = new byte[16];
+            Array.Copy(key, truncatedKey, 16);
+            var myAes = Aes.Create();
+            myAes.KeySize = keySize;
+            myAes.Key = truncatedKey;
+            myAes.GenerateIV();
         }
 
         public byte[] Encrypt(string text)
@@ -26,47 +29,32 @@ namespace Diffie_Hellman_Protocol
         }
         public byte[] Encrypt(byte[] data)
         {
-            using (Aes aesAlg = Aes.Create())
+            // Создаем объект для шифрования
+            ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
+
+            using (MemoryStream msEncrypt = new MemoryStream())
             {
-                aesAlg.Key = key;
-                aesAlg.KeySize = keySize;
-                aesAlg.GenerateIV(); // Генерируем вектор инициализации
+                // Записываем вектор инициализации в начало потока
+                msEncrypt.Write(myAes.IV, 0, myAes.IV.Length);
 
-                // Создаем объект для шифрования
-                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
-
-                using (MemoryStream msEncrypt = new MemoryStream())
+                // Создаем объект для шифрования потока данных
+                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                 {
-                    // Записываем вектор инициализации в начало потока
-                    msEncrypt.Write(aesAlg.IV, 0, aesAlg.IV.Length);
-
-                    // Создаем объект для шифрования потока данных
-                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                    {
-                        // Шифруем данные и записываем в поток
-                        csEncrypt.Write(data, 0, data.Length);
-                        csEncrypt.FlushFinalBlock();
-                    }
-
-                    return msEncrypt.ToArray();
+                    // Шифруем данные и записываем в поток
+                    csEncrypt.Write(data, 0, data.Length);
+                    csEncrypt.FlushFinalBlock();
                 }
+
+                return msEncrypt.ToArray();
             }
         }
 
         public byte[] Decrypt(byte[] encryptedData)
         {
-            using (Aes aesAlg = Aes.Create())
+            try
             {
-                aesAlg.Key = key;
-                aesAlg.KeySize = keySize;
-
-                // Считываем вектор инициализации из начала зашифрованных данных
-                byte[] iv = new byte[aesAlg.IV.Length];
-                Array.Copy(encryptedData, 0, iv, 0, iv.Length);
-                aesAlg.IV = iv;
-
                 // Создаем объект для расшифрования
-                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+                ICryptoTransform decryptor = myAes.CreateDecryptor(myAes.Key, myAes.IV);
 
                 using (MemoryStream msDecrypt = new MemoryStream())
                 {
@@ -74,13 +62,26 @@ namespace Diffie_Hellman_Protocol
                     using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Write))
                     {
                         // Расшифровываем данные и записываем в поток
-                        csDecrypt.Write(encryptedData, iv.Length, encryptedData.Length - iv.Length);
+                        csDecrypt.Write(encryptedData, 0, encryptedData.Length);
                         csDecrypt.FlushFinalBlock();
                     }
 
                     return msDecrypt.ToArray();
                 }
+
             }
+            catch (CryptographicException ex)
+            {
+                // Обработка исключения
+                Console.WriteLine("Возникла криптографическая ошибка: " + ex.Message);
+                // Другие действия по обработке исключения, если необходимо
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Возникло другое исключение: " + ex.Message);
+            }
+            return new byte[10]; // Возвращаем пустой массив в случае ошибки
+           
         }
         public string DecryptString(byte[] encryptedData)
         {

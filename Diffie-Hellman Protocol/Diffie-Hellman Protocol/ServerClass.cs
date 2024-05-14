@@ -25,7 +25,7 @@ namespace Diffie_Hellman_Protocol
         private TcpListener listener;
         public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
-        public int bit = 128;
+        public int BitLength = 128;
 
         public ServerClass(string ipAddress, int port)
         {
@@ -71,10 +71,19 @@ namespace Diffie_Hellman_Protocol
                 switch (text)
                 {
                     case "GEN_KEY":
-                        BigInteger key = GenerateKey(stream);
+                        BigInteger key;
+                        do
+                        {
+                            key = GenerateKey(stream);
+                        } while(PrimeNumberUtils.GetBitLength(key) != BitLength);
                         if (key != 0)
                         {
-                            aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
+                            Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
+                            byte[] keyBytes = key.ToByteArray();
+                            byte[] truncatedKey = new byte[16];
+                            Array.Copy(keyBytes, truncatedKey, 15);
+                            aes = new AES(truncatedKey, PrimeNumberUtils.GetBitLength(key));
+                            //aes = new AES(key.Take(16).ToArray(), PrimeNumberUtils.GetBitLength(key));
                             Send(stream, "SUCCESFUL_GEN");
                         }
                         else
@@ -157,7 +166,7 @@ namespace Diffie_Hellman_Protocol
         public BigInteger GenerateKey(NetworkStream stream)
         {
             byte[] data;
-            BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
+            BigInteger[] paramsArray = GenerateFirstPublicParams(BitLength);
             BigInteger p = paramsArray[0], g = paramsArray[1];
 
             Send(stream, p);
@@ -165,20 +174,27 @@ namespace Diffie_Hellman_Protocol
 
             data = Receive(stream);
             BigInteger A = new BigInteger(data);
-            BigInteger b = GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
-            BigInteger B = DiffieHellman.CalculateKey(g, b, p);
+
+            BigInteger b, B;
+            do
+            {
+                b = DiffieHellman.GenerateSecondPublicParam(BitLength);
+                B = DiffieHellman.CalculateKey(g, b, p);
+            }
+            while (b >= p || PrimeNumberUtils.GetBitLength(B) != BitLength);
+            
 
             Send(stream, B);
             BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-            return k;
-            /*Console.WriteLine("Server P: " + p.ToString());
+            Console.WriteLine("Server P: " + p.ToString());
             Console.WriteLine("Server G: " + g.ToString());
             Console.WriteLine("Server received A:" + A.ToString());
             Console.WriteLine("Server b:" + b.ToString());
             Console.WriteLine("Server gen B:" + B.ToString());
-            Console.WriteLine("Server calculate k:" + k.ToString());*/
-
-
+            Console.WriteLine("Server calculate k:" + k.ToString());
+            Console.WriteLine(PrimeNumberUtils.GetBitLength(p));
+            Console.WriteLine(PrimeNumberUtils.GetBitLength(k));
+            return k;
         }
     }
 }
