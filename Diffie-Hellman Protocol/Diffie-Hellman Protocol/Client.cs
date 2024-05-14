@@ -25,6 +25,7 @@ namespace Diffie_Hellman_Protocol
         const string serverIP = "127.0.0.1"; // IP адрес сервера
         const int serverPort = 8081; // Порт сервера
         bool IsKeyGen = false;
+        AES aes;
         public Client()
         {
             InitializeComponent();
@@ -49,9 +50,9 @@ namespace Diffie_Hellman_Protocol
                 string password = textBox2.Text;
                 login = "roma2003";
                 password = "roma2003";
-                Send(client.stream, login);
-                Send(client.stream, password);
-                int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
+                Send(client.stream, aes.Encrypt(login));
+                Send(client.stream, aes.Encrypt(password));
+                int idUser = BitConverter.ToInt32(aes.Decrypt(Receive(client.stream)), 0);
                 //Console.WriteLine(idUser);
                 if (idUser != -1)
                 {
@@ -105,6 +106,7 @@ namespace Diffie_Hellman_Protocol
                     {
                         Console.WriteLine("Успешная генерация ключа");
                         IsKeyGen = true;
+                        aes = new AES(k.ToByteArray(), PrimeNumberUtils.GetBitLength(k));
                         break;
                     }
                     else if (msg == "FAILURE_GEN")
@@ -115,6 +117,7 @@ namespace Diffie_Hellman_Protocol
                     }
                 }
             });
+            
         }
 
         private void UpdateTextBox(string text)

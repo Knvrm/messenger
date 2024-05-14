@@ -13,15 +13,15 @@ namespace Diffie_Hellman_Protocol
             BigInteger q = 2 * p + 1;
             BigInteger g = 2;
             //int bit = GetBitLength(p);
-            
-            while(true)
+
+            while (true)
             {
                 if (BigInteger.ModPow(g, 2, q) != 1 && BigInteger.ModPow(g, p, q) != 1 && BigInteger.ModPow(g, 2 * p, q) == 1)
                     return g;
                 g += 1;
             }
         }
-
+        
         public static BigInteger[] GenerateFirstPublicParams(int bit)
         {
             BigInteger p;
@@ -29,7 +29,7 @@ namespace Diffie_Hellman_Protocol
             {
                 p = PrimeNumberUtils.GeneratePrimeNumber(bit - 1);
             }
-            while(!MillerRabinTest(2 * p + 1, Convert.ToInt32(BigInteger.Log(2 * p + 1))));
+            while (!MillerRabinTest(2 * p + 1, Convert.ToInt32(BigInteger.Log(2 * p + 1))));
             BigInteger q = 2 * p + 1;
 
             BigInteger g = FindPrimitiveRoot(p);

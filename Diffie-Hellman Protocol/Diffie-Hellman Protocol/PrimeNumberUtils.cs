@@ -13,21 +13,45 @@ namespace Diffie_Hellman_Protocol
     {
         public static BigInteger GenerateBigInteger(int bit)
         {
-            int byteCount = (bit + 7) / 8; // Вычисляем количество байтов на основе битовой длины
-
-            byte[] bytes = new byte[byteCount];
-            RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
-
-            do
+            string a = "1";
+            Random rnd = new Random();
+            for (int i = 1; i < bit; i++)
             {
-                rng.GetBytes(bytes); // Генерируем случайные байты
-                bytes[byteCount - 1] &= (byte)(0xFF >> (8 - (bit % 8))); // Обрезаем лишние биты
+                a += Convert.ToString(rnd.Next(0, 2));
             }
-            while (bytes[0] == 0); // Проверяем, что старший байт не равен нулю
 
-            BigInteger result = new BigInteger(bytes); // Преобразуем байты в BigInteger
+            char[] a_reverse = a.ToCharArray();
+            Array.Reverse(a_reverse);
+            a = new string(a_reverse);
 
-            return BigInteger.Abs(result); // Возвращаем абсолютное значение числа
+            BigInteger b = 0;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                b += BigInteger.Pow(2, i) * Convert.ToInt32(Convert.ToString(a[i]));
+            }
+            return BigInteger.Abs(b);
+        }
+        public static BigInteger GenerateBigInteger2(int bit)
+        {
+            string a = "";
+            Random rnd = new Random();
+            for (int i = 1; i <= bit; i++)
+            {
+                a += Convert.ToString(rnd.Next(0, 2));
+            }
+
+            char[] a_reverse = a.ToCharArray();
+            Array.Reverse(a_reverse);
+            a = new string(a_reverse);
+
+            BigInteger b = 0;
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                b += BigInteger.Pow(2, i) * Convert.ToInt32(Convert.ToString(a[i]));
+            }
+            return BigInteger.Abs(b);
         }
 
         public static BigInteger GeneratePrimeNumber(int bit)
@@ -38,32 +62,32 @@ namespace Diffie_Hellman_Protocol
 
                 if (x % 2 == 0)
                     x++;
-
-                if (MillerRabinTest(x, 80))
+                //Console.WriteLine((int)BigInteger.Log(x));
+                //Console.WriteLine(x.ToString());
+                if (MillerRabinTest(x, (int)BigInteger.Log(x)))
                     return x;
             }
         }
         public static int GetBitLength(BigInteger x)
         {
             int bitLength = 0;
-            while(x != 0)
+            while (x != 0)
             {
                 x >>= 1;
                 bitLength++;
             }
-    
+
 
             return bitLength;
         }
         public static bool MillerRabinTest(BigInteger n, int k)
         {
-            if (n <= 1)
+            if (n <= 1 || n == 4)
                 return false;
-            if (n == 2)
+            if (n <= 3)
                 return true;
-            if (n % 2 == 0)
-                return false;
 
+            // Представляем n - 1 в виде (2^s * d), где d - нечётное
             BigInteger d = n - 1;
             int s = 0;
             while (d % 2 == 0)
@@ -72,32 +96,34 @@ namespace Diffie_Hellman_Protocol
                 s++;
             }
 
+            // Проводим k итераций
             for (int i = 0; i < k; i++)
             {
-                BigInteger a = GenerateBigInteger(GetBitLength(n)); // Случайное число a
-                if (a < 2)
-                    a = 2;
-                if (a >= n)
-                    a = n - 1;
+                // Генерируем случайное число a в диапазоне [2, n - 1]
+                BigInteger a = GenerateBigInteger2(GetBitLength(n-1));
 
+                // Вычисляем x = a^d mod n
                 BigInteger x = BigInteger.ModPow(a, d, n);
+
+                // Если x равно 1 или n - 1, переходим к следующей итерации
                 if (x == 1 || x == n - 1)
                     continue;
-                bool probablePrime = false;
-                for (int j = 0; j < s - 1; j++)
+
+                // Повторяем операцию r - 1 раз, где r = s
+                for (int r = 1; r < s; r++)
                 {
                     x = BigInteger.ModPow(x, 2, n);
                     if (x == 1)
-                        return false;
+                        return false; // Находим свидетеля непростоты числа
                     if (x == n - 1)
-                    {
-                        probablePrime = true;
-                        break;
-                    }
+                        break; // Переходим к следующей итерации
                 }
-                if (!probablePrime)
-                    return false;
+
+                if (x != n - 1)
+                    return false; // Находим свидетеля непростоты числа
             }
+
+            // Если для всех k итераций не найдено свидетеля непростоты, вероятность того, что число простое, высока
             return true;
         }
     }

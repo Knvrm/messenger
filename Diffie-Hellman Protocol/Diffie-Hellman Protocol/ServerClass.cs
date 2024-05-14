@@ -64,21 +64,30 @@ namespace Diffie_Hellman_Protocol
             var stream = client.GetStream();
             clients.Add(stream);
             int idUser = 0;
-
+            AES aes = null;
             while (true)
             {
                 string text = ReceiveString(stream);
                 switch (text)
                 {
                     case "GEN_KEY":
-                        if (GenerateKey(stream)) 
+                        BigInteger key = GenerateKey(stream);
+                        if (key != 0)
+                        {
+                            aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
                             Send(stream, "SUCCESFUL_GEN");
+                        }
                         else
                             Send(stream, "FAILURE_GEN");
                         break;
                     case "AUTH":
                         // Вызов функции авторизации
-                        idUser = Authenticate(stream);
+                        string login = "", password = "";
+
+                        login = aes.DecryptString(Receive(stream));
+                        password = aes.DecryptString(Receive(stream));
+                        if (DBManager.IsLoginAndPassword(login, password, connection))
+                            idUser = DBManager.GetUserId(login, connection);
                         Send(stream, idUser);
                         break;
                     case "CLIENT_CLOSED":
@@ -87,14 +96,14 @@ namespace Diffie_Hellman_Protocol
                         client.Close();
                         return;
                     case "REGISTRATION":
-                        string login = ReceiveString(stream);
-                        if (DBManager.IsUserNameExist(login, connection))
+                        string login1 = ReceiveString(stream);
+                        if (DBManager.IsUserNameExist(login1, connection))
                             Send(stream, "USER_EXIST");
                         else
                         {
                             Send(stream, "USER_NOT_EXIST");
-                            string password = ReceiveString(stream);
-                            if (DBManager.AddUser(login, password, connection) == true)
+                            string password1 = ReceiveString(stream);
+                            if (DBManager.AddUser(login1, password1, connection) == true)
                                 Send(stream, "SUCCESFUL_REGISTRATION");
                             else
                                 Send(stream, "FAILURE_REGISTRATION");
@@ -145,18 +154,7 @@ namespace Diffie_Hellman_Protocol
             }
             //client.Close();
         }
-        public int Authenticate(NetworkStream stream)
-        {
-            string login = "", password = "";
-
-            login = ReceiveString(stream);
-            password = ReceiveString(stream);
-            if (DBManager.IsLoginAndPassword(login, password, connection))
-                return DBManager.GetUserId(login, connection);
-            else
-                return -1;
-        }
-        public bool GenerateKey(NetworkStream stream)
+        public BigInteger GenerateKey(NetworkStream stream)
         {
             byte[] data;
             BigInteger[] paramsArray = GenerateFirstPublicParams(bit);
@@ -172,10 +170,7 @@ namespace Diffie_Hellman_Protocol
 
             Send(stream, B);
             BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-            if (k != 0) 
-                return true;
-            else
-                return false;
+            return k;
             /*Console.WriteLine("Server P: " + p.ToString());
             Console.WriteLine("Server G: " + g.ToString());
             Console.WriteLine("Server received A:" + A.ToString());
