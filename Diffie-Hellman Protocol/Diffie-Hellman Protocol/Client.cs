@@ -40,9 +40,9 @@ namespace Diffie_Hellman_Protocol
             {
                 continue;
             }
-            if (textBox1.Text != "")
+            if (textBox1.Text == "")
                 MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (textBox2.Text != "")
+            else if (textBox2.Text == "")
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             {
@@ -51,10 +51,13 @@ namespace Diffie_Hellman_Protocol
                 string password = textBox2.Text;
                 login = "roma2003";
                 password = "roma2003";
-                Send(client.stream, aes.Encrypt(login));
-                Send(client.stream, aes.Encrypt(password));
-                int idUser = BitConverter.ToInt32(aes.Decrypt(Receive(client.stream)), 0);
+                /*Send(client.stream, aes.Encrypt(login));
+                Send(client.stream, aes.Encrypt(password));*/
+                Send(client.stream, login);
+                Send(client.stream, password);
+                //int idUser = BitConverter.ToInt32(aes.Decrypt(Receive(client.stream)), 0);
                 //Console.WriteLine(idUser);
+                int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
                 if (idUser != -1)
                 {
                     Console.WriteLine("Успешная авторизация");
@@ -71,7 +74,6 @@ namespace Diffie_Hellman_Protocol
                 }
             }
         }
-
 
         private async void Client_Load(object sender, EventArgs e)
         {

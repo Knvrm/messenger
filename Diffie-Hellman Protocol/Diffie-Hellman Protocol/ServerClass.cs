@@ -93,8 +93,10 @@ namespace Diffie_Hellman_Protocol
                         // Вызов функции авторизации
                         string login = "", password = "";
 
-                        login = aes.DecryptString(Receive(stream));
-                        password = aes.DecryptString(Receive(stream));
+                        /*login = aes.DecryptString(Receive(stream));
+                        password = aes.DecryptString(Receive(stream));*/
+                        login = ReceiveString(stream);
+                        password = ReceiveString(stream);
                         if (DBManager.IsLoginAndPassword(login, password, connection))
                             idUser = DBManager.GetUserId(login, connection);
                         Send(stream, idUser);
