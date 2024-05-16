@@ -1,0 +1,43 @@
+Console.WriteLine("\nclient data");
+foreach (byte b in encrypted)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+Console.WriteLine("\nclient key");
+foreach (byte b in aes.Key)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+Console.WriteLine("\nclient iv\n");
+foreach (byte b in myAes.IV)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+
+Console.WriteLine("\nserver data");
+foreach (byte b in data)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+Console.WriteLine("\nserver key");
+foreach (byte b in key)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+Console.WriteLine("\nserver iv\n");
+foreach (byte b in iv)
+{
+    Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+}
+
+/*Send(client.stream, "TEST");
+string text = "hello";
+SecuritySend(client.stream, text);*/
+
+                Console.WriteLine("Client P: " + p.ToString());
+                Console.WriteLine("Client G: " + g.ToString());
+                Console.WriteLine("Client a:" + a.ToString());
+                Console.WriteLine("Client gen A:" + A.ToString());
+                Console.WriteLine("Client receiver B:" + B.ToString());
+                Console.WriteLine("Client calculate k:" + k.ToString());
+

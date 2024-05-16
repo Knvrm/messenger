@@ -16,6 +16,7 @@ using System.Windows.Forms;
 using System.Data;
 using static Diffie_Hellman_Protocol.Server;
 using System.Diagnostics.Eventing.Reader;
+using System.Security.Cryptography;
 
 
 namespace Diffie_Hellman_Protocol
@@ -87,14 +88,15 @@ namespace Diffie_Hellman_Protocol
                         // Вызов функции авторизации
                         string login = "", password = "";
 
-                        /*login = aes.DecryptString(Receive(stream));
-                        password = aes.DecryptString(Receive(stream));*/
+                        login = SecurityReceive(stream, aes.Key);
+                        password = SecurityReceive(stream, aes.Key);
                         /*login = ReceiveString(stream);
                         password = ReceiveString(stream);*/
                         if (DBManager.IsLoginAndPassword(login, password, connection))
                             idUser = DBManager.GetUserId(login, connection);
-                        /*Console.WriteLine("server" + Encoding.UTF8.GetString(aes.Encrypt(BitConverter.GetBytes(idUser))));
-                        Send(stream, aes.Encrypt(BitConverter.GetBytes(idUser)));*/
+                        // Console.WriteLine("server" + Encoding.UTF8.GetString(aes.Encrypt(BitConverter.GetBytes(idUser))));
+                        Aes myAes = Aes.Create();
+                        SecuritySend(stream, idUser.ToString(), aes);
                         break;
                     case "CLIENT_CLOSED":
                         Console.WriteLine("Клиент отключился");
@@ -150,9 +152,8 @@ namespace Diffie_Hellman_Protocol
                             Send(stream, "FAILURE_SEND");
                         break;
                     case "TEST":
-                        byte[] data1 = SecurityReceive(stream, aes.Key);
-                        string text1 = Encoding.UTF8.GetString(data1);
-                        Console.WriteLine("Получено сообщение от клиента " + text1);
+                        string data1 = SecurityReceive(stream, aes.Key);
+                        Console.WriteLine("Получено сообщение от клиента " + data1);
                         break;
                     default:
                         
@@ -163,6 +164,16 @@ namespace Diffie_Hellman_Protocol
 
             }
             //client.Close();
+        }
+        public void SecuritySend(NetworkStream stream, string text, AES aes)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            Aes myAes = Aes.Create();
+            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+
+            
+
+            NetworkStreamManager.SecuritySend(stream, encrypted, myAes.IV);
         }
         public BigInteger GenerateKey(NetworkStream stream)
         {

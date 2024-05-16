@@ -27,18 +27,41 @@ namespace Diffie_Hellman_Protocol
                 Console.WriteLine("Ошибка отправки");
             }
         }
+
         public static void SecuritySend(NetworkStream stream, byte[] data, byte[] iv)
         {
-            byte[] lengthBytes = BitConverter.GetBytes(iv.Length + 1);
+            byte[] lengthBytes = BitConverter.GetBytes(iv.Length); // Без добавления единицы
             stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
 
             stream.WriteAsync(iv, 0, iv.Length).Wait();
-            
-            lengthBytes = BitConverter.GetBytes(data.Length);
-            stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
+
+            byte[] lengthBytes2 = BitConverter.GetBytes(data.Length);
+            stream.WriteAsync(lengthBytes2, 0, lengthBytes2.Length).Wait();
 
             stream.WriteAsync(data, 0, data.Length).Wait();
         }
+
+        public static string SecurityReceive(NetworkStream stream, byte[] key)
+        {
+            byte[] lengthBytes = new byte[sizeof(int)];
+            stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();
+
+            int ivLength = BitConverter.ToInt32(lengthBytes, 0);
+            byte[] iv = new byte[ivLength];
+            stream.ReadAsync(iv, 0, iv.Length).Wait();
+
+            byte[] lengthBytes2 = new byte[sizeof(int)];
+            stream.ReadAsync(lengthBytes2, 0, lengthBytes2.Length).Wait();
+            int dataLength = BitConverter.ToInt32(lengthBytes2, 0);
+
+            // Чтение фактических данных
+            byte[] data = new byte[dataLength];
+            stream.ReadAsync(data, 0, data.Length).Wait();
+            
+            string decrypt = AES.DecryptStringFromBytes_Aes(data, key, iv);
+            return decrypt;
+        }
+
         public static void Send(NetworkStream stream, BigInteger x)
         {
             byte[] data = x.ToByteArray();
@@ -55,29 +78,6 @@ namespace Diffie_Hellman_Protocol
             Send(stream, data);
         }
 
-        public static byte[] SecurityReceive(NetworkStream stream, byte[] key)
-        {
-            byte[] lengthBytes = new byte[sizeof(int)];
-            stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();
-
-            int ivLength = BitConverter.ToInt32(lengthBytes, 0);
-            byte[] _iv = new byte[ivLength];
-            stream.ReadAsync(_iv, 0, _iv.Length).Wait();
-            byte[] iv = new byte[_iv.Length - 1];
-            Array.Copy(_iv, 0, iv, 0, iv.Length);
-
-            stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();
-            int dataLength = BitConverter.ToInt32(lengthBytes, 0);
-
-            // Чтение фактических данных
-            byte[] data = new byte[dataLength];
-            stream.ReadAsync(data, 0, data.Length).Wait();
-
-            string decrypt = AES.DecryptStringFromBytes_Aes(data, key, iv);
-            
-            Console.WriteLine(decrypt);
-            return data;
-        }
         public static byte[] Receive(NetworkStream stream)
         {
             byte[] lengthBytes = new byte[sizeof(int)];
@@ -94,22 +94,5 @@ namespace Diffie_Hellman_Protocol
             byte[] dataBytes = Receive(stream);
             return Encoding.UTF8.GetString(dataBytes);
         }
-
-        /*            Console.WriteLine("\nserver data");
-            foreach (byte b in data)
-            {
-                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
-            }
-            Console.WriteLine("\nserver key");
-            foreach (byte b in key)
-            {
-                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
-            }
-            Console.WriteLine("\nserver iv");
-            foreach (byte b in iv)
-            {
-                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
-            }*/
-
     }
 }
