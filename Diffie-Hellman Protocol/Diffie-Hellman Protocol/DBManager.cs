@@ -10,7 +10,7 @@ namespace Diffie_Hellman_Protocol
 {
     internal class DBManager
     {
-        public static bool IsChatName(string ChatName, MySqlConnection connection)
+        /*public static bool IsChatName(string ChatName, MySqlConnection connection)
         {
 
             string sql = $"SELECT name FROM mydb.chats WHERE name = \"{ChatName}\"";
@@ -28,19 +28,18 @@ namespace Diffie_Hellman_Protocol
                 reader.Close();
                 return false;
             }
-        }
+        }*/
         public static int GetUserId(string UserName, MySqlConnection connection)
         {
             string sql = "SELECT idUser FROM mydb.users WHERE login = @UserName";
             MySqlCommand command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@UserName", UserName);
 
-            int userId = -1;
-
-            userId = Convert.ToInt32(command.ExecuteScalar());
-
-
-            return userId;
+            //Что возвращается по умолчанию, если запись не найдена
+            if (command.ExecuteScalar() != null)
+                return Convert.ToInt32(command.ExecuteScalar());
+            else
+                return -1;
         }
         public static bool IsLoginAndPassword(string login, string passwd, MySqlConnection connection)
         {
@@ -53,17 +52,20 @@ namespace Diffie_Hellman_Protocol
             command.Parameters.AddWithValue("@passwd", passwd);
 
             MySqlDataReader reader = command.ExecuteReader();
-            
-            if (reader.HasRows)
-            {
-                reader.Close();
-                return true;
-            }
-            else
-            {
-                reader.Close();
-                return false;
-            }
+            // using чтобы close вызывалась автоматически
+            bool result = reader.HasRows;
+            reader.Close();
+            return result;
+            //if (reader.HasRows)
+            //{
+            //    reader.Close();
+            //    return true;
+            //}
+            //else
+            //{
+            //    reader.Close();
+            //    return false;
+            //}
         }
         public static string GetChatsByUserId(int userId, MySqlConnection connection)
         {
@@ -77,7 +79,7 @@ namespace Diffie_Hellman_Protocol
             while (reader.Read())
             {
                 int chatId = reader.GetInt32("Chats_idChat");
-                result.Append(chatId).Append(" ");
+                result.Append(chatId).Append(" "); // join
             }
 
             // Удалить последний пробел, если список не пустой
@@ -99,6 +101,7 @@ namespace Diffie_Hellman_Protocol
 
             // Подготовка SQL запроса с использованием IN оператора
             StringBuilder sqlBuilder = new StringBuilder("SELECT name FROM mydb.chats WHERE idChat IN (");
+            // Проверка на sql инъекцию
             for (int i = 0; i < chatIds.Count; i++)
             {
                 sqlBuilder.Append("@ChatId").Append(i);

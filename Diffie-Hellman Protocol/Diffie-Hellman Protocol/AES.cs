@@ -5,87 +5,98 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.IO;
+using Org.BouncyCastle.Crypto.Paddings;
 
 namespace Diffie_Hellman_Protocol
 {
-    internal class AES
+    public class AES
     {
-        Aes myAes;
+        int KeySize;
+        public byte[] Key;
 
         public AES(byte[] key, int keySize)
         {
             byte[] truncatedKey = new byte[16];
             Array.Copy(key, truncatedKey, 16);
-            var myAes = Aes.Create();
-            myAes.KeySize = keySize;
-            myAes.Key = truncatedKey;
-            myAes.GenerateIV();
+            KeySize = keySize;
+            Key = truncatedKey;
         }
 
-        public byte[] Encrypt(string text)
+        public static byte[] EncryptStringToBytes_Aes(string plainText, byte[] Key, byte[] IV)
         {
-            byte[] data = Encoding.UTF8.GetBytes(text);
-            return Encrypt(data);
-        }
-        public byte[] Encrypt(byte[] data)
-        {
-            // Создаем объект для шифрования
-            ICryptoTransform encryptor = myAes.CreateEncryptor(myAes.Key, myAes.IV);
+            // Check arguments.
+            if (plainText == null || plainText.Length <= 0)
+                throw new ArgumentNullException("plainText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+            byte[] encrypted;
 
-            using (MemoryStream msEncrypt = new MemoryStream())
+            // Create an Aes object
+            // with the specified key and IV.
+            using (Aes aesAlg = Aes.Create())
             {
-                // Записываем вектор инициализации в начало потока
-                msEncrypt.Write(myAes.IV, 0, myAes.IV.Length);
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
 
-                // Создаем объект для шифрования потока данных
-                using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                // Create an encryptor to perform the stream transform.
+                ICryptoTransform encryptor = aesAlg.CreateEncryptor(aesAlg.Key, aesAlg.IV);
+
+                // Create the streams used for encryption.
+                using (MemoryStream msEncrypt = new MemoryStream())
                 {
-                    // Шифруем данные и записываем в поток
-                    csEncrypt.Write(data, 0, data.Length);
-                    csEncrypt.FlushFinalBlock();
-                }
-
-                return msEncrypt.ToArray();
-            }
-        }
-
-        public byte[] Decrypt(byte[] encryptedData)
-        {
-            try
-            {
-                // Создаем объект для расшифрования
-                ICryptoTransform decryptor = myAes.CreateDecryptor(myAes.Key, myAes.IV);
-
-                using (MemoryStream msDecrypt = new MemoryStream())
-                {
-                    // Создаем объект для расшифрования потока данных
-                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Write))
+                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                     {
-                        // Расшифровываем данные и записываем в поток
-                        csDecrypt.Write(encryptedData, 0, encryptedData.Length);
-                        csDecrypt.FlushFinalBlock();
+                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt))
+                        {
+                            //Write all data to the stream.
+                            swEncrypt.Write(plainText);
+                        }
+                        encrypted = msEncrypt.ToArray();
                     }
-
-                    return msDecrypt.ToArray();
                 }
+            }
 
-            }
-            catch (CryptographicException ex)
-            {
-                // Обработка исключения
-                Console.WriteLine("Возникла криптографическая ошибка: " + ex.Message);
-                // Другие действия по обработке исключения, если необходимо
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Возникло другое исключение: " + ex.Message);
-            }
-            return new byte[10]; // Возвращаем пустой массив в случае ошибки
-           
+            // Return the encrypted bytes from the memory stream.
+            return encrypted;
         }
-        public string DecryptString(byte[] encryptedData)
+
+        public static string DecryptStringFromBytes_Aes(byte[] cipherText, byte[] Key, byte[] IV)
         {
-            return Encoding.UTF8.GetString(Decrypt(encryptedData));
+            // Check arguments.
+            if (cipherText == null || cipherText.Length <= 0)
+                throw new ArgumentNullException("cipherText");
+            if (Key == null || Key.Length <= 0)
+                throw new ArgumentNullException("Key");
+            if (IV == null || IV.Length <= 0)
+                throw new ArgumentNullException("IV");
+
+            string plaintext = null;
+
+            using (Aes aesAlg = Aes.Create())
+            {
+                aesAlg.Key = Key;
+                aesAlg.IV = IV;
+
+                ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
+
+                using (MemoryStream msDecrypt = new MemoryStream(cipherText))
+                {
+                    using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
+                    {
+                        using (StreamReader srDecrypt = new StreamReader(csDecrypt))
+                        {
+
+
+                            plaintext = srDecrypt.ReadToEnd();
+                        }
+                    }
+                }
+            }
+
+            return plaintext;
         }
+
     }
 }

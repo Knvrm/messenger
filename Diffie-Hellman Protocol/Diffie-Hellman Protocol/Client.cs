@@ -1,4 +1,5 @@
 ﻿using MySqlX.XDevAPI;
+using Org.BouncyCastle.Crypto.Paddings;
 using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections;
@@ -10,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Numerics;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -26,7 +28,7 @@ namespace Diffie_Hellman_Protocol
         const string serverIP = "127.0.0.1"; // IP адрес сервера
         const int serverPort = 8081; // Порт сервера
         bool IsKeyGen = false;
-        AES aes;
+        public AES aes;
         public Client()
         {
             InitializeComponent();
@@ -40,7 +42,13 @@ namespace Diffie_Hellman_Protocol
             {
                 continue;
             }
-            if (textBox1.Text == "")
+            Send(client.stream, "TEST");
+            string text = "hello";
+            SecuritySend(client.stream, text);
+            
+
+
+            /*if (textBox1.Text == "")
                 MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else if (textBox2.Text == "")
                 MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -49,16 +57,19 @@ namespace Diffie_Hellman_Protocol
                 Send(client.stream, "AUTH");
                 string login = textBox1.Text;
                 string password = textBox2.Text;
-                login = "roma2003";
-                password = "roma2003";
-                /*Send(client.stream, aes.Encrypt(login));
-                Send(client.stream, aes.Encrypt(password));*/
-                Send(client.stream, login);
-                Send(client.stream, password);
-                //int idUser = BitConverter.ToInt32(aes.Decrypt(Receive(client.stream)), 0);
+                //login = "roma2003";
+                //password = "roma2003";
+                SecuritySend(client.stream, login);
+                SecuritySend(client.stream, password);
+                *//*Send(client.stream, login);
+                Send(client.stream, password);*//*
+                byte[] data = aes.Decrypt(Receive(client.stream));
+                string encrypt = "client" + Encoding.UTF8.GetString(data);
+                int idUser = BitConverter.ToInt32(data, 0);
+                Console.WriteLine(idUser);
                 //Console.WriteLine(idUser);
-                int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
-                if (idUser != -1)
+                //int idUser = BitConverter.ToInt32(Receive(client.stream), 0);
+                if (idUser != 0)
                 {
                     Console.WriteLine("Успешная авторизация");
                     Messenger form = new Messenger(idUser, client.stream);
@@ -72,7 +83,15 @@ namespace Diffie_Hellman_Protocol
                     MessageBox.Show("Неправильно введен логин или пароль",
                         "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }
+            }*/
+        }
+        public void SecuritySend(NetworkStream stream, string text)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            Aes myAes = Aes.Create();
+            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+            
+            NetworkStreamManager.SecuritySend(stream, encrypted, myAes.IV);
         }
 
         private async void Client_Load(object sender, EventArgs e)
@@ -81,39 +100,39 @@ namespace Diffie_Hellman_Protocol
             {
                 Send(client.stream, "GEN_KEY");
                 BigInteger k;
-                int BitLength;
+
+                byte[] data;
+                data = Receive(client.stream);
+                BigInteger p = new BigInteger(data);
+
+                data = Receive(client.stream);
+                BigInteger g = new BigInteger(data);
+                int BitLength = PrimeNumberUtils.GetBitLength(p);
+
+                Console.WriteLine("Client P: " + p.ToString());
+                Console.WriteLine("Client G: " + g.ToString());
+                BigInteger a, A;
                 do
                 {
-                    byte[] data;
-                    data = Receive(client.stream);
-                    BigInteger p = new BigInteger(data);
+                    a = DiffieHellman.GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
+                    A = DiffieHellman.CalculateKey(g, a, p);
+                }
+                while (a >= p || PrimeNumberUtils.GetBitLength(A) != BitLength);
 
-                    data = Receive(client.stream);
-                    BigInteger g = new BigInteger(data);
-                    BitLength = PrimeNumberUtils.GetBitLength(p);
+                Console.WriteLine("Client a:" + a.ToString());
+                Console.WriteLine("Client gen A:" + A.ToString());
+                Send(client.stream, A);
 
-                    Console.WriteLine("Client P: " + p.ToString());
-                    Console.WriteLine("Client G: " + g.ToString());
-                    BigInteger a, A;
-                    do
-                    {
-                        a = DiffieHellman.GenerateSecondPublicParam(PrimeNumberUtils.GetBitLength(p));
-                        A = DiffieHellman.CalculateKey(g, a, p);
-                    }
-                    while (a >= p || PrimeNumberUtils.GetBitLength(A) != BitLength);
+                data = Receive(client.stream);
+                BigInteger B = new BigInteger(data);
+                Console.WriteLine("Client receiver B:" + B.ToString());
 
-                    Console.WriteLine("Client a:" + a.ToString());
-                    Console.WriteLine("Client gen A:" + A.ToString());
-                    Send(client.stream, A);
+                k = DiffieHellman.CalculateKey(B, a, p);
+                Console.WriteLine("Client calculate k:" + k.ToString());
+                if (PrimeNumberUtils.GetBitLength(k) < BitLength)
+                    k += BigInteger.Pow(2, BitLength - 1);
 
-                    data = Receive(client.stream);
-                    BigInteger B = new BigInteger(data);
-                    Console.WriteLine("Client receiver B:" + B.ToString());
 
-                    k = DiffieHellman.CalculateKey(B, a, p);
-                    Console.WriteLine("Client calculate k:" + k.ToString());
-                } while (PrimeNumberUtils.GetBitLength(k) != BitLength);
-                
                 while (true)
                 {
                     string msg = ReceiveString(client.stream);
@@ -161,5 +180,21 @@ namespace Diffie_Hellman_Protocol
             reg.Show();
             Visible = false;
         }
+
+        /*Console.WriteLine("client data");
+            foreach (byte b in encrypted)
+            {
+                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+            }
+            Console.WriteLine("\nclient key");
+            foreach (byte b in aes.Key)
+            {
+                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+            }
+            Console.WriteLine("\nclient iv");
+            foreach (byte b in myAes.IV)
+            {
+                Console.Write(b.ToString() + " "); // Вывод каждого байта как числового значения
+            }*/
     }
 }

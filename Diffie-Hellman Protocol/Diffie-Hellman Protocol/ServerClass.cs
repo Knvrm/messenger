@@ -71,18 +71,12 @@ namespace Diffie_Hellman_Protocol
                 switch (text)
                 {
                     case "GEN_KEY":
-                        BigInteger key;
-                        do
-                        {
-                            key = GenerateKey(stream);
-                        } while(PrimeNumberUtils.GetBitLength(key) != BitLength);
+                        BigInteger key = GenerateKey(stream);
+                        
                         if (key != 0)
                         {
-                            Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
-                            byte[] keyBytes = key.ToByteArray();
-                            byte[] truncatedKey = new byte[16];
-                            Array.Copy(keyBytes, truncatedKey, 15);
-                            aes = new AES(truncatedKey, PrimeNumberUtils.GetBitLength(key));
+                            //Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
+                            aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
                             //aes = new AES(key.Take(16).ToArray(), PrimeNumberUtils.GetBitLength(key));
                             Send(stream, "SUCCESFUL_GEN");
                         }
@@ -95,11 +89,12 @@ namespace Diffie_Hellman_Protocol
 
                         /*login = aes.DecryptString(Receive(stream));
                         password = aes.DecryptString(Receive(stream));*/
-                        login = ReceiveString(stream);
-                        password = ReceiveString(stream);
+                        /*login = ReceiveString(stream);
+                        password = ReceiveString(stream);*/
                         if (DBManager.IsLoginAndPassword(login, password, connection))
                             idUser = DBManager.GetUserId(login, connection);
-                        Send(stream, idUser);
+                        /*Console.WriteLine("server" + Encoding.UTF8.GetString(aes.Encrypt(BitConverter.GetBytes(idUser))));
+                        Send(stream, aes.Encrypt(BitConverter.GetBytes(idUser)));*/
                         break;
                     case "CLIENT_CLOSED":
                         Console.WriteLine("Клиент отключился");
@@ -154,10 +149,14 @@ namespace Diffie_Hellman_Protocol
                         else
                             Send(stream, "FAILURE_SEND");
                         break;
+                    case "TEST":
+                        byte[] data1 = SecurityReceive(stream, aes.Key);
+                        string text1 = Encoding.UTF8.GetString(data1);
+                        Console.WriteLine("Получено сообщение от клиента " + text1);
+                        break;
                     default:
-                        Console.WriteLine("Получено сообщение от клиента " + text);
-                        // Обработка неизвестных сообщений
-                        //ProcessUnknownMessage(text);
+                        
+
                         break;
                 }
 
@@ -188,14 +187,16 @@ namespace Diffie_Hellman_Protocol
 
             Send(stream, B);
             BigInteger k = DiffieHellman.CalculateKey(A, b, p);
-            Console.WriteLine("Server P: " + p.ToString());
+            if (PrimeNumberUtils.GetBitLength(k) < BitLength)
+                k += BigInteger.Pow(2, BitLength - 1);
+            /*Console.WriteLine("Server P: " + p.ToString());
             Console.WriteLine("Server G: " + g.ToString());
             Console.WriteLine("Server received A:" + A.ToString());
             Console.WriteLine("Server b:" + b.ToString());
             Console.WriteLine("Server gen B:" + B.ToString());
             Console.WriteLine("Server calculate k:" + k.ToString());
             Console.WriteLine(PrimeNumberUtils.GetBitLength(p));
-            Console.WriteLine(PrimeNumberUtils.GetBitLength(k));
+            Console.WriteLine(PrimeNumberUtils.GetBitLength(k));*/
             return k;
         }
     }
