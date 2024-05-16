@@ -1,21 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Sockets;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using System.Threading;
-using System.IO;
 using System.Numerics;
 using static Diffie_Hellman_Protocol.DiffieHellman;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
-using System.Windows.Forms;
 using System.Data;
-using static Diffie_Hellman_Protocol.Server;
-using System.Diagnostics.Eventing.Reader;
 using System.Security.Cryptography;
 
 
@@ -24,7 +18,6 @@ namespace Diffie_Hellman_Protocol
     public class ServerClass
     {
         private TcpListener listener;
-        public List<NetworkStream> clients = new List<NetworkStream>();
         static MySqlConnection connection;
         public int BitLength = 128;
 
@@ -52,94 +45,85 @@ namespace Diffie_Hellman_Protocol
 
             while (true)
             {
-                // подключение клиента
                 TcpClient client = await listener.AcceptTcpClientAsync();
 
-                // обслуживание нового клиента
-                await Task.Run(async () => await HandleClientAsync(client));
+                await Task.Run(() => HandleClient(client));
             }
         }
 
-        private async Task HandleClientAsync(TcpClient client)
+        private void HandleClient(TcpClient client)
         {
             var stream = client.GetStream();
-            clients.Add(stream);
             int idUser = 0;
             AES aes = null;
+            string text = ReceiveString(stream);
+            if(text == "GEN_KEY")
+            {
+                BigInteger key = GenerateKey(stream);
+
+                if (key != 0)
+                {
+                    //Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
+                    aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
+                    //aes = new AES(key.Take(16).ToArray(), PrimeNumberUtils.GetBitLength(key));
+                    Send(stream, "SUCCESFUL_GEN");
+                }
+                else
+                    Send(stream, "FAILURE_GEN");
+            }
+
             while (true)
             {
-                string text = ReceiveString(stream);
+                text = ReceiveEncryptedText(stream, aes.Key);
                 switch (text)
                 {
-                    case "GEN_KEY":
-                        BigInteger key = GenerateKey(stream);
-                        
-                        if (key != 0)
-                        {
-                            //Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
-                            aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
-                            //aes = new AES(key.Take(16).ToArray(), PrimeNumberUtils.GetBitLength(key));
-                            Send(stream, "SUCCESFUL_GEN");
-                        }
+                    case "REGISTRATION":
+                        string login1 = ReceiveEncryptedText(stream, aes.Key);
+                        if (DBManager.IsUserNameExist(login1, connection))
+                            SendEncryptedText(stream, "USER_EXIST", aes);
                         else
-                            Send(stream, "FAILURE_GEN");
+                        {
+                            SendEncryptedText(stream, "USER_NOT_EXIST", aes);
+                            string password1 = ReceiveEncryptedText(stream, aes.Key);
+                            if (DBManager.AddUser(login1, password1, connection) == true)
+                                SendEncryptedText(stream, "SUCCESFUL_REGISTRATION", aes);
+                            else
+                                SendEncryptedText(stream, "FAILURE_REGISTRATION", aes);
+                        }
                         break;
                     case "AUTH":
                         // Вызов функции авторизации
                         string login = "", password = "";
 
-                        login = SecurityReceive(stream, aes.Key);
-                        password = SecurityReceive(stream, aes.Key);
-                        /*login = ReceiveString(stream);
-                        password = ReceiveString(stream);*/
+                        login = ReceiveEncryptedText(stream, aes.Key);
+                        password = ReceiveEncryptedText(stream, aes.Key);
                         if (DBManager.IsLoginAndPassword(login, password, connection))
                             idUser = DBManager.GetUserId(login, connection);
                         // Console.WriteLine("server" + Encoding.UTF8.GetString(aes.Encrypt(BitConverter.GetBytes(idUser))));
                         Aes myAes = Aes.Create();
-                        SecuritySend(stream, idUser.ToString(), aes);
-                        break;
-                    case "CLIENT_CLOSED":
-                        Console.WriteLine("Клиент отключился");
-                        stream.Close();
-                        client.Close();
-                        return;
-                    case "REGISTRATION":
-                        string login1 = ReceiveString(stream);
-                        if (DBManager.IsUserNameExist(login1, connection))
-                            Send(stream, "USER_EXIST");
-                        else
-                        {
-                            Send(stream, "USER_NOT_EXIST");
-                            string password1 = ReceiveString(stream);
-                            if (DBManager.AddUser(login1, password1, connection) == true)
-                                Send(stream, "SUCCESFUL_REGISTRATION");
-                            else
-                                Send(stream, "FAILURE_REGISTRATION");
-                        }
+                        SendEncryptedText(stream, idUser.ToString(), aes);
                         break;
                     case "GET_CHATS":
-                        if (idUser != 0)
+                        if (idUser != -1)
                         {
                             string chats = DBManager.GetChatsByUserId(idUser, connection);
-                            Send(stream, chats);
+                            SendEncryptedText(stream, chats, aes);
                             string chatNames = DBManager.GetChatNamesByIds(chats, connection);
-                            Send(stream, chatNames);
-                        }  
+                            SendEncryptedText(stream, chatNames, aes);
+                        }
                         break;
                     case "GET_CHAT_MESSAGES":
-                        byte[] data = Receive(stream);
-                        int ChatId = BitConverter.ToInt32(data, 0);
+                        int ChatId = Int32.Parse(ReceiveEncryptedText(stream, aes.Key));
                         List<Tuple<string, string>> messages = DBManager.GetMessagesWithSenders(ChatId, connection);
-                        Send(stream, messages.Count);
+                        SendEncryptedText(stream, messages.Count.ToString(), aes);
                         foreach (var message in messages)
                         {
-                            //Console.WriteLine($"{message.Item1}: {message.Item2}");
-                            Send(stream, message.Item1);
-                            Send(stream, message.Item2);
+                            SendEncryptedText(stream, message.Item1.ToString(), aes);
+                            SendEncryptedText(stream, message.Item2.ToString(), aes);
                         }
                         break;
                     case "SEND_MESSAGE":
-                        string msg = ReceiveString(stream);
+                        string msg = ReceiveEncryptedText(stream, aes.Key);
                         string[] parts = msg.Split(' ');
 
                         // Получаем айди чата, айди пользователя и текст сообщения
@@ -147,33 +131,33 @@ namespace Diffie_Hellman_Protocol
                         string userId = parts[1];
                         string content = string.Join(" ", parts.Skip(2));
                         if (DBManager.AddMessage(chatId, userId, content, connection))
-                            Send(stream, "SUCCESFUL_SEND");
+                            SendEncryptedText(stream, "SUCCESFUL_SEND", aes);
                         else
-                            Send(stream, "FAILURE_SEND");
+                            SendEncryptedText(stream, "FAILURE_SEND", aes);
                         break;
-                    case "TEST":
+                    /*case "TEST":
                         string data1 = SecurityReceive(stream, aes.Key);
                         Console.WriteLine("Получено сообщение от клиента " + data1);
-                        break;
+                        break;*/
+                    case "CLIENT_CLOSED":
+                        Console.WriteLine("Клиент отключился");
+                        stream.Close();
+                        client.Close();
+                        return;
                     default:
-                        
-
                         break;
                 }
 
 
             }
-            //client.Close();
         }
-        public void SecuritySend(NetworkStream stream, string text, AES aes)
+        public void SendEncryptedText(NetworkStream stream, string text, AES aes)
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
             Aes myAes = Aes.Create();
             byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
 
-            
-
-            NetworkStreamManager.SecuritySend(stream, encrypted, myAes.IV);
+            NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
         }
         public BigInteger GenerateKey(NetworkStream stream)
         {
@@ -200,14 +184,6 @@ namespace Diffie_Hellman_Protocol
             BigInteger k = DiffieHellman.CalculateKey(A, b, p);
             if (PrimeNumberUtils.GetBitLength(k) < BitLength)
                 k += BigInteger.Pow(2, BitLength - 1);
-            /*Console.WriteLine("Server P: " + p.ToString());
-            Console.WriteLine("Server G: " + g.ToString());
-            Console.WriteLine("Server received A:" + A.ToString());
-            Console.WriteLine("Server b:" + b.ToString());
-            Console.WriteLine("Server gen B:" + B.ToString());
-            Console.WriteLine("Server calculate k:" + k.ToString());
-            Console.WriteLine(PrimeNumberUtils.GetBitLength(p));
-            Console.WriteLine(PrimeNumberUtils.GetBitLength(k));*/
             return k;
         }
     }

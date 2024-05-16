@@ -10,25 +10,6 @@ namespace Diffie_Hellman_Protocol
 {
     internal class DBManager
     {
-        /*public static bool IsChatName(string ChatName, MySqlConnection connection)
-        {
-
-            string sql = $"SELECT name FROM mydb.chats WHERE name = \"{ChatName}\"";
-            MySqlCommand command = new MySqlCommand(sql, connection);
-
-            MySqlDataReader reader = command.ExecuteReader();
-
-            if (reader.HasRows)
-            {
-                reader.Close();
-                return true;
-            }
-            else
-            {
-                reader.Close();
-                return false;
-            }
-        }*/
         public static int GetUserId(string UserName, MySqlConnection connection)
         {
             string sql = "SELECT idUser FROM mydb.users WHERE login = @UserName";
@@ -56,16 +37,6 @@ namespace Diffie_Hellman_Protocol
             bool result = reader.HasRows;
             reader.Close();
             return result;
-            //if (reader.HasRows)
-            //{
-            //    reader.Close();
-            //    return true;
-            //}
-            //else
-            //{
-            //    reader.Close();
-            //    return false;
-            //}
         }
         public static string GetChatsByUserId(int userId, MySqlConnection connection)
         {

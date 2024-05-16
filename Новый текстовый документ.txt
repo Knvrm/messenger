@@ -40,4 +40,11 @@ SecuritySend(client.stream, text);*/
                 Console.WriteLine("Client gen A:" + A.ToString());
                 Console.WriteLine("Client receiver B:" + B.ToString());
                 Console.WriteLine("Client calculate k:" + k.ToString());
-
+/*Console.WriteLine("Server P: " + p.ToString());
+Console.WriteLine("Server G: " + g.ToString());
+Console.WriteLine("Server received A:" + A.ToString());
+Console.WriteLine("Server b:" + b.ToString());
+Console.WriteLine("Server gen B:" + B.ToString());
+Console.WriteLine("Server calculate k:" + k.ToString());
+Console.WriteLine(PrimeNumberUtils.GetBitLength(p));
+Console.WriteLine(PrimeNumberUtils.GetBitLength(k));*/

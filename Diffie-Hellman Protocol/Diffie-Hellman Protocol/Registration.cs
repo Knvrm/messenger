@@ -1,10 +1,12 @@
-﻿using System;
+﻿using MySqlX.XDevAPI;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -16,16 +18,12 @@ namespace Diffie_Hellman_Protocol
     public partial class Registration : Form
     {
         NetworkStream stream;
-        public Registration(NetworkStream stream)
+        AES aes;
+        public Registration(NetworkStream stream, AES aes)
         {
             InitializeComponent();
             this.stream = stream;
-        }
-
-        private void Registration_Load(object sender, EventArgs e)
-        {
-            
-
+            this.aes = aes;
         }
 
         private void button1_Click_1(object sender, EventArgs e)
@@ -40,15 +38,15 @@ namespace Diffie_Hellman_Protocol
                     MessageBox.Show("Пароль должен содержать не менее 8 символов и хотя бы одну цифру.", "Ошибка регистрации", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else
                 {
-                    Send(stream, "REGISTRATION");
-                    Send(stream, textBox1.Text);
-                    string reply = ReceiveString(stream);
+                    SendEncryptedText(stream, "REGISTRATION");
+                    SendEncryptedText(stream, textBox1.Text);
+                    string reply = ReceiveEncryptedText(stream, aes.Key);
                     if (reply == "USER_EXIST")
                         MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка регистрации", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                     {
-                        Send(stream, textBox2.Text);
-                        string text = ReceiveString(stream);
+                        SendEncryptedText(stream, textBox2.Text);
+                        string text = ReceiveEncryptedText(stream, aes.Key);
                         if (text == "SUCCESFUL_REGISTRATION")
                             MessageBox.Show("Вы успешно зарегистрировались", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         else
@@ -85,6 +83,20 @@ namespace Diffie_Hellman_Protocol
 
 
             return true;
+        }
+
+        public void SendEncryptedText(NetworkStream stream, string text)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            Aes myAes = Aes.Create();
+            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+
+            NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
+        }
+
+        private void Registration_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SendEncryptedText(stream, "CLIENT_CLOSED");
         }
     }
 }

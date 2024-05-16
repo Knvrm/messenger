@@ -92,7 +92,7 @@
             this.textBox1.Location = new System.Drawing.Point(47, 33);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(473, 22);
-            this.textBox1.TabIndex = 9;
+            this.textBox1.TabIndex = 8;
             // 
             // textBox2
             // 
@@ -125,7 +125,7 @@
             this.Controls.Add(this.label1);
             this.Name = "Registration";
             this.Text = "Регистрация";
-            this.Load += new System.EventHandler(this.Registration_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Registration_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

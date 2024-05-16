@@ -28,7 +28,7 @@ namespace Diffie_Hellman_Protocol
             }
         }
 
-        public static void SecuritySend(NetworkStream stream, byte[] data, byte[] iv)
+        public static void SendEncryptedText(NetworkStream stream, byte[] data, byte[] iv)
         {
             byte[] lengthBytes = BitConverter.GetBytes(iv.Length); // Без добавления единицы
             stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
@@ -41,7 +41,7 @@ namespace Diffie_Hellman_Protocol
             stream.WriteAsync(data, 0, data.Length).Wait();
         }
 
-        public static string SecurityReceive(NetworkStream stream, byte[] key)
+        public static string ReceiveEncryptedText(NetworkStream stream, byte[] key)
         {
             byte[] lengthBytes = new byte[sizeof(int)];
             stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();

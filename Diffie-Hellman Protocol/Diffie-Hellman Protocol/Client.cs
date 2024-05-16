@@ -36,52 +36,6 @@ namespace Diffie_Hellman_Protocol
             client.ConnectAsync(serverIP, serverPort);
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            while (!IsKeyGen)
-            {
-                continue;
-            }
-
-            if (textBox1.Text == "")
-                MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else if (textBox2.Text == "")
-                MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            else
-            {
-                Send(client.stream, "AUTH");
-                //login = "roma2003";
-                //password = "roma2003";
-                SecuritySend(client.stream, textBox1.Text);
-                SecuritySend(client.stream, textBox2.Text);
-
-                string msg = SecurityReceive(client.stream, aes.Key);
-                int idUser = Int32.Parse(msg);
-                if (idUser != 0)
-                {
-                    Console.WriteLine("Успешная авторизация");
-                    Messenger form = new Messenger(idUser, client.stream);
-                    form.Show();
-                    textBox1.Clear();
-                    textBox2.Clear();
-                    this.Visible = false;
-                }
-                else
-                {
-                    MessageBox.Show("Неправильно введен логин или пароль",
-                        "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-        public void SecuritySend(NetworkStream stream, string text)
-        {
-            byte[] data = Encoding.UTF8.GetBytes(text);
-            Aes myAes = Aes.Create();
-            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
-
-            NetworkStreamManager.SecuritySend(stream, encrypted, myAes.IV);
-        }
-
         private async void Client_Load(object sender, EventArgs e)
         {
             await Task.Run(() =>
@@ -133,19 +87,75 @@ namespace Diffie_Hellman_Protocol
                     }
                 }
             });
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if(!IsKeyGen)
+            {
+                MessageBox.Show("Подождите, идет процесс установления безопасного соединения", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                if (textBox1.Text == "")
+                    MessageBox.Show("Введите логин", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else if (textBox2.Text == "")
+                    MessageBox.Show("Введите пароль", "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                else
+                {
+                    SendEncryptedText(client.stream, "AUTH");
+                    //login = "roma2003";
+                    //password = "roma2003";
+                    SendEncryptedText(client.stream, textBox1.Text);
+                    SendEncryptedText(client.stream, textBox2.Text);
+
+                    string msg = ReceiveEncryptedText(client.stream, aes.Key);
+                    int idUser = Int32.Parse(msg);
+                    if (idUser != 0)
+                    {
+                        Console.WriteLine("Успешная авторизация");
+                        Messenger form = new Messenger(idUser, client.stream, aes);
+                        form.Show();
+                        textBox1.Clear();
+                        textBox2.Clear();
+                        this.Visible = false;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неправильно введен логин или пароль",
+                            "Ошибка авторизации", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
             
+        }
+        public void SendEncryptedText(NetworkStream stream, string text)
+        {
+            byte[] data = Encoding.UTF8.GetBytes(text);
+            Aes myAes = Aes.Create();
+            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+
+            NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
+        }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            if (!IsKeyGen)
+            {
+                MessageBox.Show("Подождите, идет процесс установления безопасного соединения с сервером.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                Registration reg = new Registration(client.stream, aes);
+                reg.Show();
+                Visible = false;
+            }
         }
 
         private void Client_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Send(client.stream, "CLIENT_CLOSED");
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {            
-            Registration reg = new Registration(client.stream);
-            reg.Show();
-            Visible = false;
+            SendEncryptedText(client.stream, "CLIENT_CLOSED");
         }
     }
 }
