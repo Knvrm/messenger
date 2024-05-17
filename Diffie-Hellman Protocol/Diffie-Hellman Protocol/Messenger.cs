@@ -40,7 +40,7 @@ namespace Diffie_Hellman_Protocol
             List<string> chatIds = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
             List<string> chatNames = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
             listView1.Items.Clear();
-            for(int i = 0; i < chatIds.Count; i++)
+            for (int i = 0; i < chatIds.Count; i++)
                 chats.Add(chatNames[i], Convert.ToInt32(chatIds[i]));
             listView1.Columns.Add("Ваши чаты:", listView1.Width - 5);
             listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
@@ -49,7 +49,7 @@ namespace Diffie_Hellman_Protocol
             foreach (string chatName in chatNames)
             {
                 listView1.Items.Add(chatName);
-                
+
             }
 
             //Console.WriteLine(chats);
@@ -66,7 +66,7 @@ namespace Diffie_Hellman_Protocol
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(richTextBox1.Text != "")
+            if (richTextBox1.Text != "")
             {
                 SendEncryptedText(stream, "SEND_MESSAGE");
                 string message = $"{curChatId.ToString()} {userId.ToString()} {richTextBox1.Text}";
@@ -147,11 +147,11 @@ namespace Diffie_Hellman_Protocol
 
         private void button3_Click(object sender, EventArgs e)
         {
-            
+
             previousChatNames.Clear();
             foreach (ListViewItem item in listView1.Items)
             {
-                previousChatNames.Add(item.Text); 
+                previousChatNames.Add(item.Text);
             }
 
             listView1.Items.Clear();
@@ -166,7 +166,6 @@ namespace Diffie_Hellman_Protocol
                 var item = new ListViewItem("");
                 listView1.Items.Add(item);
             }
-            listView1.Enabled = false;
 
             // Создаем радиокнопки в колонке "Радио"
             AddRadioButtons();
@@ -174,29 +173,82 @@ namespace Diffie_Hellman_Protocol
 
         private void AddRadioButtons()
         {
-            int count = 0;
-            foreach (ListViewItem item in listView1.Items)
+            listView1.Visible = false;
+            button3.Visible =  false;
+            // Создаем FlowLayoutPanel
+            FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel
             {
-                var radioButton = new RadioButton();
-                radioButton.Checked = false;
-                radioButton.CheckedChanged += (sender, e) =>
+                AutoScroll = true, // Включает прокрутку при необходимости
+                FlowDirection = FlowDirection.TopDown, // Радиокнопки располагаются вертикально
+                WrapContents = true, // Не переносить элементы на следующую строку
+                Width = listView1.Width - 5,
+                Height = listView1.Height - 30, // Высота с учетом кнопки
+                BorderStyle = BorderStyle.FixedSingle // Добавляем границу панели
+            };
+            this.Controls.Add(flowLayoutPanel);
+            RadioButton selectedRadioButton = null;
+            foreach (string user in users)
+            {
+                var radioButton = new RadioButton
                 {
-                    // Обработка события изменения состояния радиокнопки
-                    // В данном случае, вы можете сохранить выбранный пользователем элемент ListView
+                    AutoSize = true,
+                    TextAlign = ContentAlignment.MiddleRight // Выравниваем текст по правому краю
                 };
 
-                // Добавляем радиокнопку в ListView
-                listView1.Controls.Add(radioButton);
-                radioButton.Parent = listView1;
-                radioButton.Text = users[count];
-                count++;
-/*                radioButton.Dock = DockStyle.Right;
-                radioButton.Width = listView1.Width - 5;*/
-                radioButton.BringToFront();
-                // Устанавливаем радиокнопку в нужную ячейку ListView
-                radioButton.Location = listView1.GetItemRect(listView1.Items.IndexOf(item)).Location;
-            }
-        }
+                radioButton.CheckedChanged += (sender, e) =>
+                {
+                    if (radioButton.Checked)
+                    {
+                        // Снимаем выделение с предыдущей выбранной радиокнопки
+                        if (selectedRadioButton != null && selectedRadioButton != radioButton)
+                            selectedRadioButton.Checked = false;
 
+                        // Устанавливаем текущую радиокнопку как выбранную
+                        selectedRadioButton = radioButton;
+                    }
+                };
+                var label = new Label
+                {
+                    Text = user,
+                    AutoSize = true
+                };
+                label.Click += (sender, e) =>
+                {
+                    radioButton.Checked = true; // Выбираем радиокнопку
+                };
+
+                // Создаем TableLayoutPanel для каждой радиокнопки и текста
+                TableLayoutPanel tableLayoutPanel = new TableLayoutPanel
+                {
+                    ColumnCount = 2, // Два столбца для текста и радиокнопки
+                    RowCount = 1,
+                    Dock = DockStyle.Top,
+                    AutoSize = true,
+                    RightToLeft = RightToLeft.No, // Оставляем стандартное направление
+                    Padding = new Padding(1) // Отступ для границы
+                };
+
+                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, flowLayoutPanel.Width - 35));
+                tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 25));
+
+                // Добавляем label и radioButton в TableLayoutPanel
+                tableLayoutPanel.Controls.Add(label, 0, 0);
+                tableLayoutPanel.Controls.Add(radioButton, 1, 0);
+
+                // Добавляем TableLayoutPanel в FlowLayoutPanel
+                flowLayoutPanel.Controls.Add(tableLayoutPanel);
+            }
+
+            System.Windows.Forms.Button createChatButton = new System.Windows.Forms.Button
+            {
+                Text = "Создать новый чат",
+                Width = flowLayoutPanel.Width, // Ширина кнопки равна ширине FlowLayoutPanel
+                Height = 30, // Высота кнопки
+            };
+            createChatButton.Show();
+            createChatButton.BringToFront();
+            createChatButton.Location = new Point(0, flowLayoutPanel.Height);
+
+        }
     }
 }

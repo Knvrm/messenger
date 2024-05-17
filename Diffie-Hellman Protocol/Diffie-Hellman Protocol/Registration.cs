@@ -96,7 +96,14 @@ namespace Diffie_Hellman_Protocol
 
         private void Registration_FormClosing(object sender, FormClosingEventArgs e)
         {
-            SendEncryptedText(stream, "CLIENT_CLOSED");
+            foreach (Form form in Application.OpenForms)
+            {
+                if (!form.Visible)
+                {
+                    form.Visible = true;
+                }
+            }
+            Close();
         }
     }
 }

@@ -55,15 +55,15 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(179, 404);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(359, 46);
+            this.richTextBox1.Size = new System.Drawing.Size(352, 46);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(536, 404);
+            this.button1.Location = new System.Drawing.Point(528, 404);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(90, 46);
+            this.button1.Size = new System.Drawing.Size(98, 46);
             this.button1.TabIndex = 2;
             this.button1.Text = "Отправить";
             this.button1.UseVisualStyleBackColor = true;
@@ -71,10 +71,10 @@
             // 
             // richTextBox2
             // 
-            this.richTextBox2.Location = new System.Drawing.Point(179, 1);
+            this.richTextBox2.Location = new System.Drawing.Point(179, 0);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
-            this.richTextBox2.Size = new System.Drawing.Size(447, 407);
+            this.richTextBox2.Size = new System.Drawing.Size(454, 407);
             this.richTextBox2.TabIndex = 3;
             this.richTextBox2.Text = "";
             // 
@@ -92,7 +92,7 @@
             // 
             this.button3.Location = new System.Drawing.Point(128, 0);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(52, 25);
+            this.button3.Size = new System.Drawing.Size(52, 35);
             this.button3.TabIndex = 5;
             this.button3.Text = "New";
             this.button3.UseVisualStyleBackColor = true;
