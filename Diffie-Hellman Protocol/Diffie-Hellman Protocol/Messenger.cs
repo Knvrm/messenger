@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -22,6 +23,9 @@ namespace Diffie_Hellman_Protocol
         Dictionary<string, int> chats = new Dictionary<string, int>();
         int curChatId;
         AES aes;
+        private List<string> users = new List<string>();
+        private List<string> selectedUsers;
+        List<string> previousChatNames = new List<string>();
         public Messenger(int userId, NetworkStream stream, AES aes)
         {
             InitializeComponent();
@@ -38,7 +42,7 @@ namespace Diffie_Hellman_Protocol
             listView1.Items.Clear();
             for(int i = 0; i < chatIds.Count; i++)
                 chats.Add(chatNames[i], Convert.ToInt32(chatIds[i]));
-            listView1.Columns.Add("Ваши чаты", listView1.Width - 5);
+            listView1.Columns.Add("Ваши чаты:", listView1.Width - 5);
             listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
 
             // Добавление элементов в ListView
@@ -140,5 +144,59 @@ namespace Diffie_Hellman_Protocol
             }
             this.Close();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+            previousChatNames.Clear();
+            foreach (ListViewItem item in listView1.Items)
+            {
+                previousChatNames.Add(item.Text); 
+            }
+
+            listView1.Items.Clear();
+
+            listView1.Columns.Add("Новый чат", listView1.Width - 5);
+
+            SendEncryptedText(stream, "GET_ALL_USER_NAMES");
+            string[] temp = ReceiveEncryptedText(stream, aes.Key).Split(' ');
+            for (int i = 0; i < temp.Length; i++)
+            {
+                users.Add(temp[i]);
+                var item = new ListViewItem("");
+                listView1.Items.Add(item);
+            }
+            listView1.Enabled = false;
+
+            // Создаем радиокнопки в колонке "Радио"
+            AddRadioButtons();
+        }
+
+        private void AddRadioButtons()
+        {
+            int count = 0;
+            foreach (ListViewItem item in listView1.Items)
+            {
+                var radioButton = new RadioButton();
+                radioButton.Checked = false;
+                radioButton.CheckedChanged += (sender, e) =>
+                {
+                    // Обработка события изменения состояния радиокнопки
+                    // В данном случае, вы можете сохранить выбранный пользователем элемент ListView
+                };
+
+                // Добавляем радиокнопку в ListView
+                listView1.Controls.Add(radioButton);
+                radioButton.Parent = listView1;
+                radioButton.Text = users[count];
+                count++;
+/*                radioButton.Dock = DockStyle.Right;
+                radioButton.Width = listView1.Width - 5;*/
+                radioButton.BringToFront();
+                // Устанавливаем радиокнопку в нужную ячейку ListView
+                radioButton.Location = listView1.GetItemRect(listView1.Items.IndexOf(item)).Location;
+            }
+        }
+
     }
 }

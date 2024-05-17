@@ -135,6 +135,10 @@ namespace Diffie_Hellman_Protocol
                         else
                             SendEncryptedText(stream, "FAILURE_SEND", aes);
                         break;
+                    case "GET_ALL_USER_NAMES":
+                        string res = DBManager.GetAllUserNames(connection);
+                        SendEncryptedText(stream, res, aes);
+                        break;
                     /*case "TEST":
                         string data1 = SecurityReceive(stream, aes.Key);
                         Console.WriteLine("Получено сообщение от клиента " + data1);

@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -114,6 +115,25 @@ namespace Diffie_Hellman_Protocol
             return rowsAffected > 0;
         }
 
+        public static string GetAllUserNames(MySqlConnection connection)
+        {
+            List<string> userNames = new List<string>();
+
+            string query = "SELECT login FROM users";
+
+            MySqlCommand command = new MySqlCommand(query, connection);
+
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string userName = reader.GetString(0); 
+                    userNames.Add(userName);
+                }
+            }
+
+            return string.Join(" ", userNames);
+        }
 
         public static bool AddMessage(string chatID, string userID, string text, MySqlConnection connection)
         {
