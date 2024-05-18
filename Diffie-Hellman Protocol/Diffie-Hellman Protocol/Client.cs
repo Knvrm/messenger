@@ -116,7 +116,7 @@ namespace Diffie_Hellman_Protocol
                     if (idUser != 0)
                     {
                         Console.WriteLine("Успешная авторизация");
-                        Messenger form = new Messenger(idUser, client.stream, aes);
+                        Messenger form = new Messenger(idUser, textBox1.Text, client.stream, aes);
                         form.Show();
                         textBox1.Clear();
                         textBox2.Clear();

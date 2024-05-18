@@ -13,21 +13,29 @@ namespace Diffie_Hellman_Protocol
     public partial class Messenger : Form
     {
         int userId;
+        string nickname;
         NetworkStream stream;
         Dictionary<string, int> chats = new Dictionary<string, int>();
         int curChatId;
         AESAdapter aes;
         private List<string> users = new List<string>();
-        public Messenger(int userId, NetworkStream stream, AESAdapter aes)
+        public Messenger(int userId, string nickname, NetworkStream stream, AESAdapter aes)
         {
             InitializeComponent();
             this.userId = userId;
             this.stream = stream;
             this.aes = aes;
+            this.nickname = nickname;
         }
 
         private void Messenger_Load(object sender, EventArgs e)
         {
+            UpdateChats();
+            //Console.WriteLine(chats);
+        }
+        public void UpdateChats()
+        {
+            listView1.Clear();
             SendEncryptedText(stream, "GET_CHATS");
             string text = ReceiveEncryptedText(stream, aes.Key);
             if (text != "CHATS_NOT_FOUND")
@@ -35,8 +43,14 @@ namespace Diffie_Hellman_Protocol
                 List<string> chatIds = new List<string>(text.Split(' '));
                 List<string> chatNames = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
                 listView1.Items.Clear();
+                chats.Clear();
                 for (int i = 0; i < chatIds.Count; i++)
+                {
+                    chatNames[i] = chatNames[i].Replace($"{nickname}_", "");
+                    chatNames[i] = chatNames[i].Replace($"_{nickname}", "");
                     chats.Add(chatNames[i], Convert.ToInt32(chatIds[i]));
+                }
+                    
                 listView1.Columns.Add("Ваши чаты:", listView1.Width - 5);
                 listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
 
@@ -44,10 +58,8 @@ namespace Diffie_Hellman_Protocol
                 foreach (string chatName in chatNames)
                 {
                     listView1.Items.Add(chatName);
-
                 }
             }
-            //Console.WriteLine(chats);
         }
 
         public void SendEncryptedText(NetworkStream stream, string text)
@@ -143,15 +155,17 @@ namespace Diffie_Hellman_Protocol
         private void button3_Click(object sender, EventArgs e)
         {
             listView1.Items.Clear();
-            listView1.Columns.Add("Новый чат", listView1.Width - 5);
-
+            users.Clear();
             SendEncryptedText(stream, "GET_ALL_USER_NAMES");
             string[] temp = ReceiveEncryptedText(stream, aes.Key).Split(' ');
             for (int i = 0; i < temp.Length; i++)
             {
-                users.Add(temp[i]);
-                var item = new ListViewItem("");
-                listView1.Items.Add(item);
+                if (temp[i] != nickname)
+                {
+                    users.Add(temp[i]);
+                    var item = new ListViewItem("");
+                    listView1.Items.Add(item);
+                }
             }
 
             AddRadioButtons();
@@ -240,17 +254,49 @@ namespace Diffie_Hellman_Protocol
             {
                 if(selectedChatName != String.Empty)
                 {
-                    Console.WriteLine(selectedChatName);
+                    /*Console.WriteLine(selectedChatName);
                     foreach(var item in chats)
                     {
                         Console.WriteLine(item.Key + " " + item.Value);
-                    }
-                    if (chats.Keys.Contains<string>(selectedChatName))
-                        UpdateChatMessages(chats[selectedChatName]);
-                    else
+                    }*/
+                    if (!chats.Keys.Contains<string>(selectedChatName))
                     {
-
+                        SendEncryptedText(stream, "ADD_CHAT");
+                        SendEncryptedText(stream, userId.ToString());
+                        SendEncryptedText(stream, selectedChatName);
+                        string text = ReceiveEncryptedText(stream, aes.Key);
+                        if(text == "SUCCESFUL_ADD_CHAT")
+                            Console.WriteLine("Чат успешно создан");
+                        else
+                            MessageBox.Show("Произошла ошибка при создании чата.", "Ошибка создания чата", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                    foreach (Control control in flowLayoutPanel.Controls)
+                    {
+                        // Если элемент является TableLayoutPanel, удаляем его и все его дочерние элементы
+                        if (control is TableLayoutPanel tableLayoutPanel)
+                        {
+                            tableLayoutPanel.Controls.Clear();
+                            tableLayoutPanel.Dispose(); // Освобождаем ресурсы
+                        }
+                    }
+
+                    flowLayoutPanel.Controls.Clear(); // Удаляем все дочерние элементы FlowLayoutPanel
+                    flowLayoutPanel.Dispose(); // Освобождаем ресурсы
+
+                    // Удаляем кнопку создания чата
+                    createChatButton.Dispose();
+                    listView1.Visible = true;
+                    button3.Visible = true;
+                    UpdateChats();
+                    foreach (ListViewItem item in listView1.Items)
+                    {
+                        if (item.Text == selectedChatName)
+                        {
+                            item.Selected = true;
+                            break; // Прерываем цикл после первого найденного элемента
+                        }
+                    }
+                    UpdateChatMessages(chats[selectedChatName]);
                 }
 
             };

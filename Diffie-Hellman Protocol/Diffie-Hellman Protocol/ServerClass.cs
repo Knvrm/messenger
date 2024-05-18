@@ -148,6 +148,15 @@ namespace Diffie_Hellman_Protocol
                         string res = DBManager.GetAllUserNames(connection);
                         SendEncryptedText(stream, res, aes);
                         break;
+                    case "ADD_CHAT":
+                        string user1 = ReceiveEncryptedText(stream, aes.Key);
+                        user1 = DBManager.GetLoginByUserId(Int32.Parse(user1), connection);
+                        string user2 = ReceiveEncryptedText(stream, aes.Key);
+                        if (DBManager.AddChat(user1, user2, connection))
+                            SendEncryptedText(stream, "SUCCESFUL_ADD_CHAT", aes);
+                        else
+                            SendEncryptedText(stream, "FAILURE_ADD_CHAT", aes);
+                        break;
                     /*case "TEST":
                         string data1 = SecurityReceive(stream, aes.Key);
                         Console.WriteLine("Получено сообщение от клиента " + data1);

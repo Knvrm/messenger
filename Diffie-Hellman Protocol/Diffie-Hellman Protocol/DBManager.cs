@@ -216,5 +216,73 @@ namespace Diffie_Hellman_Protocol
                 return count > 0;
             }
         }
+        public static bool AddChat(string user1Name, string user2Name, MySqlConnection connection)
+        {
+            // Генерируем название чата
+            string chatName = $"{user1Name}_{user2Name}";
+
+            // SQL-запрос для вставки записи в таблицу chats
+            string insertChatQuery = "INSERT INTO mydb.chats (name) VALUES (@ChatName);";
+
+            // SQL-запрос для вставки записей в таблицу ChatParticipants
+            string insertChatParticipantsQuery = @"
+                INSERT INTO mydb.ChatParticipants (Chats_idChat, Users_idUser)
+                SELECT @ChatId, idUser FROM mydb.users WHERE login IN (@User1Name, @User2Name);";
+
+            // Запускаем транзакцию
+            using (MySqlTransaction transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    // Вставляем запись в таблицу chats и получаем idChat
+                    MySqlCommand command = new MySqlCommand(insertChatQuery, connection, transaction);
+                    command.Parameters.AddWithValue("@ChatName", chatName);
+                    command.ExecuteNonQuery();
+                    long chatId = command.LastInsertedId;
+
+                    // Вставляем записи в таблицу ChatParticipants
+                    command = new MySqlCommand(insertChatParticipantsQuery, connection, transaction);
+                    command.Parameters.AddWithValue("@ChatId", chatId);
+                    command.Parameters.AddWithValue("@User1Name", user1Name);
+                    command.Parameters.AddWithValue("@User2Name", user2Name);
+                    command.ExecuteNonQuery();
+
+                    // Фиксируем транзакцию
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    // Обработка ошибок
+                    Console.WriteLine($"Ошибка при создании чата: {ex.Message}");
+                    transaction.Rollback();
+                    return false;
+                }
+            }
+        }
+        public static string GetLoginByUserId(int userId, MySqlConnection connection)
+        {
+            string login = "";
+
+            string sql = "SELECT login FROM mydb.users WHERE idUser = @UserId";
+
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@UserId", userId);
+
+                // Выполняем запрос и получаем результат
+                object result = command.ExecuteScalar();
+
+                // Если результат не равен null, приводим его к строке и сохраняем в переменной login
+                if (result != null)
+                {
+                    login = result.ToString();
+                }
+            }
+
+            return login;
+        }
+
     }
 }
