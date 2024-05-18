@@ -1,18 +1,12 @@
-﻿using MySqlX.XDevAPI;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Sockets;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using static Diffie_Hellman_Protocol.NetworkStreamManager;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Diffie_Hellman_Protocol
 {
@@ -22,11 +16,9 @@ namespace Diffie_Hellman_Protocol
         NetworkStream stream;
         Dictionary<string, int> chats = new Dictionary<string, int>();
         int curChatId;
-        AES aes;
+        AESAdapter aes;
         private List<string> users = new List<string>();
-        private List<string> selectedUsers;
-        List<string> previousChatNames = new List<string>();
-        public Messenger(int userId, NetworkStream stream, AES aes)
+        public Messenger(int userId, NetworkStream stream, AESAdapter aes)
         {
             InitializeComponent();
             this.userId = userId;
@@ -37,21 +29,24 @@ namespace Diffie_Hellman_Protocol
         private void Messenger_Load(object sender, EventArgs e)
         {
             SendEncryptedText(stream, "GET_CHATS");
-            List<string> chatIds = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
-            List<string> chatNames = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
-            listView1.Items.Clear();
-            for (int i = 0; i < chatIds.Count; i++)
-                chats.Add(chatNames[i], Convert.ToInt32(chatIds[i]));
-            listView1.Columns.Add("Ваши чаты:", listView1.Width - 5);
-            listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
-
-            // Добавление элементов в ListView
-            foreach (string chatName in chatNames)
+            string text = ReceiveEncryptedText(stream, aes.Key);
+            if (text != "CHATS_NOT_FOUND")
             {
-                listView1.Items.Add(chatName);
+                List<string> chatIds = new List<string>(text.Split(' '));
+                List<string> chatNames = new List<string>(ReceiveEncryptedText(stream, aes.Key).Split(' '));
+                listView1.Items.Clear();
+                for (int i = 0; i < chatIds.Count; i++)
+                    chats.Add(chatNames[i], Convert.ToInt32(chatIds[i]));
+                listView1.Columns.Add("Ваши чаты:", listView1.Width - 5);
+                listView1.Columns[0].TextAlign = HorizontalAlignment.Center;
 
+                // Добавление элементов в ListView
+                foreach (string chatName in chatNames)
+                {
+                    listView1.Items.Add(chatName);
+
+                }
             }
-
             //Console.WriteLine(chats);
         }
 
@@ -59,7 +54,7 @@ namespace Diffie_Hellman_Protocol
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
             Aes myAes = Aes.Create();
-            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+            byte[] encrypted = AESAdapter.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
 
             NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
         }
@@ -101,7 +96,7 @@ namespace Diffie_Hellman_Protocol
         public void UpdateChatMessages(int chatId)
         {
             SendEncryptedText(stream, "GET_CHAT_MESSAGES");
-            SendEncryptedText(stream, curChatId.ToString());
+            SendEncryptedText(stream, chatId.ToString());
             int NumberOfMessages = Int32.Parse(ReceiveEncryptedText(stream, aes.Key));
             richTextBox2.Clear();
             for (int i = 0; i < NumberOfMessages; i++)
@@ -147,15 +142,7 @@ namespace Diffie_Hellman_Protocol
 
         private void button3_Click(object sender, EventArgs e)
         {
-
-            previousChatNames.Clear();
-            foreach (ListViewItem item in listView1.Items)
-            {
-                previousChatNames.Add(item.Text);
-            }
-
             listView1.Items.Clear();
-
             listView1.Columns.Add("Новый чат", listView1.Width - 5);
 
             SendEncryptedText(stream, "GET_ALL_USER_NAMES");
@@ -167,7 +154,6 @@ namespace Diffie_Hellman_Protocol
                 listView1.Items.Add(item);
             }
 
-            // Создаем радиокнопки в колонке "Радио"
             AddRadioButtons();
         }
 
@@ -181,12 +167,13 @@ namespace Diffie_Hellman_Protocol
                 AutoScroll = true, // Включает прокрутку при необходимости
                 FlowDirection = FlowDirection.TopDown, // Радиокнопки располагаются вертикально
                 WrapContents = true, // Не переносить элементы на следующую строку
-                Width = listView1.Width - 5,
-                Height = listView1.Height - 30, // Высота с учетом кнопки
+                Width = listView1.Width - 7,
+                Height = listView1.Height, // Высота с учетом кнопки
                 BorderStyle = BorderStyle.FixedSingle // Добавляем границу панели
             };
             this.Controls.Add(flowLayoutPanel);
             RadioButton selectedRadioButton = null;
+            string selectedChatName = String.Empty;
             foreach (string user in users)
             {
                 var radioButton = new RadioButton
@@ -194,7 +181,11 @@ namespace Diffie_Hellman_Protocol
                     AutoSize = true,
                     TextAlign = ContentAlignment.MiddleRight // Выравниваем текст по правому краю
                 };
-
+                var label = new Label
+                {
+                    Text = user,
+                    AutoSize = true
+                };
                 radioButton.CheckedChanged += (sender, e) =>
                 {
                     if (radioButton.Checked)
@@ -205,13 +196,10 @@ namespace Diffie_Hellman_Protocol
 
                         // Устанавливаем текущую радиокнопку как выбранную
                         selectedRadioButton = radioButton;
+                        selectedChatName = label.Text;
                     }
                 };
-                var label = new Label
-                {
-                    Text = user,
-                    AutoSize = true
-                };
+                
                 label.Click += (sender, e) =>
                 {
                     radioButton.Checked = true; // Выбираем радиокнопку
@@ -225,7 +213,9 @@ namespace Diffie_Hellman_Protocol
                     Dock = DockStyle.Top,
                     AutoSize = true,
                     RightToLeft = RightToLeft.No, // Оставляем стандартное направление
-                    Padding = new Padding(1) // Отступ для границы
+                    Padding = new Padding(1), // Отступ для границы
+                    Width = listView1.Width - 10,
+                    Height = listView1.Height - 30
                 };
 
                 tableLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, flowLayoutPanel.Width - 35));
@@ -237,18 +227,36 @@ namespace Diffie_Hellman_Protocol
 
                 // Добавляем TableLayoutPanel в FlowLayoutPanel
                 flowLayoutPanel.Controls.Add(tableLayoutPanel);
+                
             }
-
             System.Windows.Forms.Button createChatButton = new System.Windows.Forms.Button
             {
                 Text = "Создать новый чат",
-                Width = flowLayoutPanel.Width, // Ширина кнопки равна ширине FlowLayoutPanel
+                Width = flowLayoutPanel.Width - 10, // Ширина кнопки равна ширине FlowLayoutPanel
                 Height = 30, // Высота кнопки
+                Location = new Point(0, flowLayoutPanel.Height - Height)
             };
-            createChatButton.Show();
-            createChatButton.BringToFront();
-            createChatButton.Location = new Point(0, flowLayoutPanel.Height);
+            createChatButton.Click += (sender, e) =>
+            {
+                if(selectedChatName != String.Empty)
+                {
+                    Console.WriteLine(selectedChatName);
+                    foreach(var item in chats)
+                    {
+                        Console.WriteLine(item.Key + " " + item.Value);
+                    }
+                    if (chats.Keys.Contains<string>(selectedChatName))
+                        UpdateChatMessages(chats[selectedChatName]);
+                    else
+                    {
 
+                    }
+                }
+
+            };
+            createChatButton.BringToFront();
+            createChatButton.Location = new Point(0, listView1.Height - Height);
+            flowLayoutPanel.Controls.Add(createChatButton);
         }
     }
 }

@@ -98,7 +98,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AES.cs" />
+    <Compile Include="AESAdapter.cs" />
     <Compile Include="Client.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +107,7 @@
     </Compile>
     <Compile Include="ClientClass.cs" />
     <Compile Include="DBManager.cs" />
+    <Compile Include="Hash.cs" />
     <Compile Include="Messenger.cs">
       <SubType>Form</SubType>
     </Compile>

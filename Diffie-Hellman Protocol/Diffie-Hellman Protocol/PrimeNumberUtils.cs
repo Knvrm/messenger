@@ -19,12 +19,12 @@ namespace Diffie_Hellman_Protocol
             {
                 byte[] randomByte = new byte[1];
                 rng.GetBytes(randomByte);
-                a += Convert.ToString(randomByte[0] & 1);
+                a = Convert.ToString(randomByte[0] & 1)+a;
             }
 
-            char[] a_reverse = a.ToCharArray();
-            Array.Reverse(a_reverse);
-            a = new string(a_reverse);
+            //char[] a_reverse = a.ToCharArray();
+            //Array.Reverse(a_reverse);
+            //a = new string(a_reverse);
 
             BigInteger b = 0;
 
@@ -104,6 +104,7 @@ namespace Diffie_Hellman_Protocol
             for (int i = 0; i < k; i++)
             {
                 // Генерируем случайное число a в диапазоне [2, n - 1]
+                // ????? может сгенерировать 0 или 1
                 BigInteger a = GenerateBigInteger2(GetBitLength(n-1));
 
                 // Вычисляем x = a^d mod n

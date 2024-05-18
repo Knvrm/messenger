@@ -28,7 +28,7 @@ namespace Diffie_Hellman_Protocol
         const string serverIP = "127.0.0.1"; // IP адрес сервера
         const int serverPort = 8081; // Порт сервера
         bool IsKeyGen = false;
-        public AES aes;
+        public AESAdapter aes;
         public Client()
         {
             InitializeComponent();
@@ -76,7 +76,7 @@ namespace Diffie_Hellman_Protocol
                     {
                         Console.WriteLine("Успешная генерация ключа");
                         IsKeyGen = true;
-                        aes = new AES(k.ToByteArray(), PrimeNumberUtils.GetBitLength(k));
+                        aes = new AESAdapter(k.ToByteArray(), PrimeNumberUtils.GetBitLength(k));
                         break;
                     }
                     else if (msg == "FAILURE_GEN")
@@ -87,7 +87,6 @@ namespace Diffie_Hellman_Protocol
                     }
                 }
             });
-
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -108,7 +107,9 @@ namespace Diffie_Hellman_Protocol
                     //login = "roma2003";
                     //password = "roma2003";
                     SendEncryptedText(client.stream, textBox1.Text);
-                    SendEncryptedText(client.stream, textBox2.Text);
+                    byte[] salt = ReceiveEncryptedBytes(client.stream, aes.Key);
+                    byte[] hashPassword = Hash.HashPassword(textBox2.Text , salt);
+                    SendEncryptedBytes(client.stream, hashPassword, aes);
 
                     string msg = ReceiveEncryptedText(client.stream, aes.Key);
                     int idUser = Int32.Parse(msg);
@@ -130,11 +131,12 @@ namespace Diffie_Hellman_Protocol
             }
             
         }
+        
         public void SendEncryptedText(NetworkStream stream, string text)
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
             Aes myAes = Aes.Create();
-            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+            byte[] encrypted = AESAdapter.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
 
             NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
         }

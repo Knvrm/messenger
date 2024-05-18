@@ -55,7 +55,7 @@ namespace Diffie_Hellman_Protocol
         {
             var stream = client.GetStream();
             int idUser = 0;
-            AES aes = null;
+            AESAdapter aes = null;
             string text = ReceiveString(stream);
             if(text == "GEN_KEY")
             {
@@ -64,7 +64,7 @@ namespace Diffie_Hellman_Protocol
                 if (key != 0)
                 {
                     //Console.WriteLine(PrimeNumberUtils.GetBitLength(key));
-                    aes = new AES(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));
+                    aes = new AESAdapter(key.ToByteArray(), PrimeNumberUtils.GetBitLength(key));// ????? передавать только ключ, битность считать внутри
                     //aes = new AES(key.Take(16).ToArray(), PrimeNumberUtils.GetBitLength(key));
                     Send(stream, "SUCCESFUL_GEN");
                 }
@@ -80,12 +80,13 @@ namespace Diffie_Hellman_Protocol
                     case "REGISTRATION":
                         string login1 = ReceiveEncryptedText(stream, aes.Key);
                         if (DBManager.IsUserNameExist(login1, connection))
-                            SendEncryptedText(stream, "USER_EXIST", aes);
+                            SendEncryptedText(stream, "USER_EXIST", aes); // ??? enum
                         else
                         {
                             SendEncryptedText(stream, "USER_NOT_EXIST", aes);
-                            string password1 = ReceiveEncryptedText(stream, aes.Key);
-                            if (DBManager.AddUser(login1, password1, connection) == true)
+                            byte[] salt1 = ReceiveEncryptedBytes(stream, aes.Key);
+                            byte[] hashedPassword = ReceiveEncryptedBytes(stream, aes.Key);
+                            if (DBManager.AddUser(login1, salt1, hashedPassword, connection) == true)
                                 SendEncryptedText(stream, "SUCCESFUL_REGISTRATION", aes);
                             else
                                 SendEncryptedText(stream, "FAILURE_REGISTRATION", aes);
@@ -93,26 +94,34 @@ namespace Diffie_Hellman_Protocol
                         break;
                     case "AUTH":
                         // Вызов функции авторизации
-                        string login = "", password = "";
-
-                        login = ReceiveEncryptedText(stream, aes.Key);
-                        password = ReceiveEncryptedText(stream, aes.Key);
-                        if (DBManager.IsLoginAndPassword(login, password, connection))
+                        string login = ReceiveEncryptedText(stream, aes.Key);
+                        byte[] salt = DBManager.GetUserSalt(login, connection);
+                        SendEncryptedBytes(stream, salt, aes);
+                        byte[] hashPassword = ReceiveEncryptedBytes(stream, aes.Key);
+                        if (DBManager.IsPasswordCorrect(login, hashPassword, salt, connection))
                             idUser = DBManager.GetUserId(login, connection);
                         // Console.WriteLine("server" + Encoding.UTF8.GetString(aes.Encrypt(BitConverter.GetBytes(idUser))));
                         Aes myAes = Aes.Create();
                         SendEncryptedText(stream, idUser.ToString(), aes);
                         break;
                     case "GET_CHATS":
-                        if (idUser != -1)
+                        if (idUser != 0)
                         {
                             string chats = DBManager.GetChatsByUserId(idUser, connection);
-                            SendEncryptedText(stream, chats, aes);
-                            string chatNames = DBManager.GetChatNamesByIds(chats, connection);
-                            SendEncryptedText(stream, chatNames, aes);
+                            if (chats != "")
+                            {
+                                SendEncryptedText(stream, chats, aes);
+                                string chatNames = DBManager.GetChatNamesByIds(chats, connection);
+                                SendEncryptedText(stream, chatNames, aes);
+                            }
+                            else
+                                SendEncryptedText(stream, "CHATS_NOT_FOUND", aes);
                         }
                         break;
                     case "GET_CHAT_MESSAGES":
+                        //userid не проверяется принадлежности к чату
+                        // НЕ ДОВЕРЯТЬ ДАННЫМ ПРИСЛАННЫМ ОТ ПОЛЬЗОВАТЕЛЯ
+                        // ВСЕ ДАННЫЕ НУЖНО ПРОВЕРЯТЬ!!!!
                         int ChatId = Int32.Parse(ReceiveEncryptedText(stream, aes.Key));
                         List<Tuple<string, string>> messages = DBManager.GetMessagesWithSenders(ChatId, connection);
                         SendEncryptedText(stream, messages.Count.ToString(), aes);
@@ -155,11 +164,11 @@ namespace Diffie_Hellman_Protocol
 
             }
         }
-        public void SendEncryptedText(NetworkStream stream, string text, AES aes)
+        public void SendEncryptedText(NetworkStream stream, string text, AESAdapter aes)
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
             Aes myAes = Aes.Create();
-            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+            byte[] encrypted = AESAdapter.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
 
             NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
         }

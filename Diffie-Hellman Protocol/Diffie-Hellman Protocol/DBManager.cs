@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Crypto.Paddings;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,22 +24,29 @@ namespace Diffie_Hellman_Protocol
             else
                 return -1;
         }
-        public static bool IsLoginAndPassword(string login, string passwd, MySqlConnection connection)
+        public static bool IsPasswordCorrect(string login, byte[] hashedPassword, byte[] salt, MySqlConnection connection)
         {
-            // hash + salt
-            string sql = "SELECT login, password FROM mydb.users WHERE login = @login and password = @passwd";
+            // Запрос для получения хэша для данного логина
+            string sql = "SELECT hash FROM mydb.users WHERE login = @login";
             MySqlCommand command = new MySqlCommand(sql, connection);
-
-            // добавление параметров
             command.Parameters.AddWithValue("@login", login);
-            command.Parameters.AddWithValue("@passwd", passwd);
 
-            MySqlDataReader reader = command.ExecuteReader();
-            // using чтобы close вызывалась автоматически
-            bool result = reader.HasRows;
-            reader.Close();
-            return result;
+            // Выполнение запроса и чтение результата
+            using (MySqlDataReader reader = command.ExecuteReader())
+            {
+                if (!reader.HasRows)
+                {
+                    return false; // Логин не найден
+                }
+
+                reader.Read();
+                byte[] storedHash = (byte[])reader["hash"];
+
+                // Сравнение полученного хэша с хэшем из базы данных
+                return Hash.AreHashesEqual(storedHash, hashedPassword);
+            }
         }
+
         public static string GetChatsByUserId(int userId, MySqlConnection connection)
         {
             StringBuilder result = new StringBuilder();
@@ -53,11 +61,11 @@ namespace Diffie_Hellman_Protocol
                 int chatId = reader.GetInt32("Chats_idChat");
                 result.Append(chatId).Append(" "); // join
             }
-
-            // Удалить последний пробел, если список не пустой
+            // Удалить послекдний пробел, если список не пустой
             if (result.Length > 0)
             {
                 result.Length--; // Уменьшаем длину строки на один символ, чтобы удалить последний пробел
+                // проверить, что пробел удаляется
             }
             reader.Close();
             command.Dispose();
@@ -102,13 +110,14 @@ namespace Diffie_Hellman_Protocol
 
             return string.Join(" ", chatNames);
         }
-        public static bool AddUser(string login, string password, MySqlConnection connection)
+        public static bool AddUser(string login, byte[] salt, byte[] hashedPassword, MySqlConnection connection)
         {
-            string sql = "INSERT INTO mydb.users (nickname, login, password) VALUES (@Nickname, @Login, @Password)";
+            string sql = "INSERT INTO mydb.users (nickname, login, hash, salt) VALUES (@Nickname, @Login, @Hash, @Salt)";
             MySqlCommand command = new MySqlCommand(sql, connection);
             command.Parameters.AddWithValue("@Nickname", login);  // Используем логин в качестве никнейма
             command.Parameters.AddWithValue("@Login", login);
-            command.Parameters.AddWithValue("@Password", password);
+            command.Parameters.AddWithValue("@Hash", hashedPassword);
+            command.Parameters.AddWithValue("@Salt", salt);
 
             int rowsAffected = command.ExecuteNonQuery();
 
@@ -176,7 +185,26 @@ namespace Diffie_Hellman_Protocol
 
             return messages;
         }
+        public static byte[] GetUserSalt(string userName, MySqlConnection connection)
+        {
+            string sql = "SELECT salt FROM mydb.users WHERE login = @UserName";
 
+            using (MySqlCommand command = new MySqlCommand(sql, connection))
+            {
+                command.Parameters.AddWithValue("@UserName", userName);
+
+                // Execute the query and retrieve the salt
+                object result = command.ExecuteScalar();
+                if (result != null)
+                {
+                    return (byte[])result;
+                }
+                else
+                {
+                    return null; // User does not exist
+                }
+            }
+        }
         public static bool IsUserNameExist(string UserName, MySqlConnection connection)
         {
             string sql = "SELECT COUNT(*) FROM mydb.users WHERE login = @UserName";

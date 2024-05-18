@@ -40,6 +40,20 @@ namespace Diffie_Hellman_Protocol
 
             stream.WriteAsync(data, 0, data.Length).Wait();
         }
+        public static void SendEncryptedBytes(NetworkStream stream, byte[] data, AESAdapter aes)
+        {
+            byte[] iv = AESAdapter.GenerateIV();
+            byte[] data2 = AESAdapter.EncryptBytesToBytes_Aes(data, aes.Key, iv);
+            byte[] lengthBytes = BitConverter.GetBytes(iv.Length); // Без добавления единицы
+            stream.WriteAsync(lengthBytes, 0, lengthBytes.Length).Wait();
+
+            stream.WriteAsync(iv, 0, iv.Length).Wait();
+
+            byte[] lengthBytes2 = BitConverter.GetBytes(data2.Length);
+            stream.WriteAsync(lengthBytes2, 0, lengthBytes2.Length).Wait();
+
+            stream.WriteAsync(data2, 0, data2.Length).Wait();
+        }
 
         public static string ReceiveEncryptedText(NetworkStream stream, byte[] key)
         {
@@ -58,7 +72,27 @@ namespace Diffie_Hellman_Protocol
             byte[] data = new byte[dataLength];
             stream.ReadAsync(data, 0, data.Length).Wait();
             
-            string decrypt = AES.DecryptStringFromBytes_Aes(data, key, iv);
+            string decrypt = AESAdapter.DecryptStringFromBytes_Aes(data, key, iv);
+            return decrypt;
+        }
+        public static byte[] ReceiveEncryptedBytes(NetworkStream stream, byte[] key)
+        {
+            byte[] lengthBytes = new byte[sizeof(int)];
+            stream.ReadAsync(lengthBytes, 0, lengthBytes.Length).Wait();
+
+            int ivLength = BitConverter.ToInt32(lengthBytes, 0);
+            byte[] iv = new byte[ivLength];
+            stream.ReadAsync(iv, 0, iv.Length).Wait();
+
+            byte[] lengthBytes2 = new byte[sizeof(int)];
+            stream.ReadAsync(lengthBytes2, 0, lengthBytes2.Length).Wait();
+            int dataLength = BitConverter.ToInt32(lengthBytes2, 0);
+
+            // Чтение фактических данных
+            byte[] data = new byte[dataLength];
+            stream.ReadAsync(data, 0, data.Length).Wait();
+
+            byte[] decrypt = AESAdapter.DecryptBytesFromBytes_Aes(data, key, iv);
             return decrypt;
         }
 
@@ -70,11 +104,6 @@ namespace Diffie_Hellman_Protocol
         public static void Send(NetworkStream stream, string text)
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
-            Send(stream, data);
-        }
-        public static void Send(NetworkStream stream, int x)
-        {
-            byte[] data = BitConverter.GetBytes(x);
             Send(stream, data);
         }
 

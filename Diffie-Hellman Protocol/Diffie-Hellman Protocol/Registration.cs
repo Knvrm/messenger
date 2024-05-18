@@ -1,4 +1,5 @@
 ﻿using MySqlX.XDevAPI;
+using Org.BouncyCastle.Utilities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -18,8 +19,8 @@ namespace Diffie_Hellman_Protocol
     public partial class Registration : Form
     {
         NetworkStream stream;
-        AES aes;
-        public Registration(NetworkStream stream, AES aes)
+        AESAdapter aes;
+        public Registration(NetworkStream stream, AESAdapter aes)
         {
             InitializeComponent();
             this.stream = stream;
@@ -45,7 +46,11 @@ namespace Diffie_Hellman_Protocol
                         MessageBox.Show("Пользователь с таким логином уже существует", "Ошибка регистрации", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
                     {
-                        SendEncryptedText(stream, textBox2.Text);
+                        string password = textBox2.Text;
+                        byte[] salt = Hash.GenerateSalt();
+                        byte[] hashedPassword = Hash.HashPassword(password, salt);
+                        SendEncryptedBytes(stream, salt, aes);
+                        SendEncryptedBytes(stream, hashedPassword, aes);
                         string text = ReceiveEncryptedText(stream, aes.Key);
                         if (text == "SUCCESFUL_REGISTRATION")
                             MessageBox.Show("Вы успешно зарегистрировались", "Регистрация", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -80,16 +85,15 @@ namespace Diffie_Hellman_Protocol
             {
                 return false;
             }
-
-
             return true;
         }
 
+        
         public void SendEncryptedText(NetworkStream stream, string text)
         {
             byte[] data = Encoding.UTF8.GetBytes(text);
             Aes myAes = Aes.Create();
-            byte[] encrypted = AES.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
+            byte[] encrypted = AESAdapter.EncryptStringToBytes_Aes(text, aes.Key, myAes.IV);
 
             NetworkStreamManager.SendEncryptedText(stream, encrypted, myAes.IV);
         }
@@ -103,7 +107,7 @@ namespace Diffie_Hellman_Protocol
                     form.Visible = true;
                 }
             }
-            Close();
+            this.Enabled = false;
         }
     }
 }
